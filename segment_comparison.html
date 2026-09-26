@@ -1,0 +1,571 @@
+{% extends "base.html" %}
+
+{% block title %}
+Segment Comparison | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Segment Comparison
+{% endblock %}
+
+{% block content %}
+
+<div class="segment-comparison-page">
+
+    <!-- ================================================= -->
+    <!-- INTRO -->
+    <!-- ================================================= -->
+
+    <div class="page-intro">
+
+        <div>
+
+            <span class="section-label">
+                BUSINESS ANALYTICS
+            </span>
+
+            <h2>
+                Compare Customer Segments
+            </h2>
+
+            <p>
+                Compare customer count, average spending,
+                total spending and recommended strategies
+                across automatically ranked segments.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if segments %}
+
+    <!-- ================================================= -->
+    <!-- PREPARE SAFE VALUES -->
+    <!-- ================================================= -->
+
+    {% set namespace = namespace(
+        max_customers=0,
+        max_average=0
+    ) %}
+
+    {% for segment in segments %}
+
+        {% set customers = segment.get('customers', 0) | int %}
+
+        {% set average_spending = segment.get(
+            'average_spending',
+            segment.get('avg_spending', 0)
+        ) | float %}
+
+        {% if customers > namespace.max_customers %}
+            {% set namespace.max_customers = customers %}
+        {% endif %}
+
+        {% if average_spending > namespace.max_average %}
+            {% set namespace.max_average = average_spending %}
+        {% endif %}
+
+    {% endfor %}
+
+
+    <!-- ================================================= -->
+    <!-- COMPARISON TABLE -->
+    <!-- ================================================= -->
+
+    <div class="table-card comparison-table-card">
+
+        <div class="table-header">
+
+            <div>
+
+                <h3>
+                    Segment Performance
+                </h3>
+
+                <p>
+                    Ranked by average annual spending
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="data-table comparison-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Rank
+                        </th>
+
+                        <th>
+                            Segment
+                        </th>
+
+                        <th>
+                            Cluster
+                        </th>
+
+                        <th>
+                            Customers
+                        </th>
+
+                        <th>
+                            Average Spending
+                        </th>
+
+                        <th>
+                            Total Spending
+                        </th>
+
+                        <th>
+                            Spending Range
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for segment in segments %}
+
+                    {# Safe values for this segment #}
+
+                    {% set segment_name = segment.get(
+                        'segment',
+                        segment.get('Segment', 'Unknown')
+                    ) %}
+
+                    {% set cluster = segment.get(
+                        'cluster',
+                        segment.get('Cluster', 'N/A')
+                    ) %}
+
+                    {% set customers = segment.get(
+                        'customers',
+                        0
+                    ) | int %}
+
+                    {% set average_spending = segment.get(
+                        'average_spending',
+                        segment.get('avg_spending', 0)
+                    ) | float %}
+
+                    {% set total_spending = segment.get(
+                        'total_spending',
+                        segment.get('total', 0)
+                    ) | float %}
+
+                    {% set min_spending = segment.get(
+                        'min_spending',
+                        segment.get('minimum_spending', 0)
+                    ) | float %}
+
+                    {% set max_spending = segment.get(
+                        'max_spending',
+                        segment.get('maximum_spending', 0)
+                    ) | float %}
+
+
+                    <tr>
+
+                        <!-- RANK -->
+
+                        <td>
+
+                            <span class="rank-circle">
+                                {{ loop.index }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- SEGMENT -->
+
+                        <td>
+
+                            <span class="segment-table-badge">
+                                {{ segment_name }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- CLUSTER -->
+
+                        <td>
+                            Cluster {{ cluster }}
+                        </td>
+
+
+                        <!-- CUSTOMERS -->
+
+                        <td>
+                            {{ customers }}
+                        </td>
+
+
+                        <!-- AVERAGE SPENDING -->
+
+                        <td class="money-cell">
+
+                            ₹{{ "{:,.2f}".format(
+                                average_spending
+                            ) }}
+
+                        </td>
+
+
+                        <!-- TOTAL SPENDING -->
+
+                        <td class="money-cell">
+
+                            ₹{{ "{:,.2f}".format(
+                                total_spending
+                            ) }}
+
+                        </td>
+
+
+                        <!-- SPENDING RANGE -->
+
+                        <td>
+
+                            ₹{{ "{:,.0f}".format(
+                                min_spending
+                            ) }}
+
+                            –
+
+                            ₹{{ "{:,.0f}".format(
+                                max_spending
+                            ) }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- VISUAL COMPARISON -->
+    <!-- ================================================= -->
+
+    <div class="comparison-grid">
+
+
+        <!-- ================================================= -->
+        <!-- CUSTOMER COUNT -->
+        <!-- ================================================= -->
+
+        <div class="comparison-card">
+
+            <div class="comparison-card-header">
+
+                <div>
+
+                    <span>
+                        CUSTOMER COUNT
+                    </span>
+
+                    <h3>
+                        Customers per Segment
+                    </h3>
+
+                </div>
+
+                <span>
+                    👥
+                </span>
+
+            </div>
+
+
+            <div class="comparison-bars">
+
+                {% for segment in segments %}
+
+                {% set segment_name = segment.get(
+                    'segment',
+                    segment.get('Segment', 'Unknown')
+                ) %}
+
+                {% set customers = segment.get(
+                    'customers',
+                    0
+                ) | int %}
+
+
+                <div class="comparison-bar-item">
+
+                    <div class="comparison-label">
+
+                        <span>
+                            {{ segment_name }}
+                        </span>
+
+                        <strong>
+                            {{ customers }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="comparison-track">
+
+                        {% if namespace.max_customers > 0 %}
+
+                        <progress
+                            class="comparison-fill"
+                            value="{{ customers }}"
+                            max="{{ namespace.max_customers }}"
+                        >
+                            {{ customers }}
+                        </progress>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- AVERAGE SPENDING -->
+        <!-- ================================================= -->
+
+        <div class="comparison-card">
+
+            <div class="comparison-card-header">
+
+                <div>
+
+                    <span>
+                        AVERAGE SPENDING
+                    </span>
+
+                    <h3>
+                        Spending per Segment
+                    </h3>
+
+                </div>
+
+                <span>
+                    💰
+                </span>
+
+            </div>
+
+
+            <div class="comparison-bars">
+
+                {% for segment in segments %}
+
+                {% set segment_name = segment.get(
+                    'segment',
+                    segment.get('Segment', 'Unknown')
+                ) %}
+
+                {% set average_spending = segment.get(
+                    'average_spending',
+                    segment.get('avg_spending', 0)
+                ) | float %}
+
+
+                <div class="comparison-bar-item">
+
+                    <div class="comparison-label">
+
+                        <span>
+                            {{ segment_name }}
+                        </span>
+
+                        <strong>
+                            ₹{{ "{:,.0f}".format(
+                                average_spending
+                            ) }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="comparison-track">
+
+                        {% if namespace.max_average > 0 %}
+
+                        <progress
+                            class="comparison-fill"
+                            value="{{ average_spending }}"
+                            max="{{ namespace.max_average }}"
+                        >
+                            {{ average_spending }}
+                        </progress>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STRATEGY COMPARISON -->
+    <!-- ================================================= -->
+
+    <div class="comparison-strategy-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <span class="section-label">
+                    BUSINESS STRATEGY
+                </span>
+
+                <h2>
+                    Recommended Actions
+                </h2>
+
+            </div>
+
+            <a
+                href="{{ url_for('recommendations') }}"
+                class="btn btn-outline"
+            >
+                Detailed Recommendations →
+            </a>
+
+        </div>
+
+
+        <div class="strategy-grid">
+
+            {% for segment in segments %}
+
+            {% set segment_name = segment.get(
+                'segment',
+                segment.get('Segment', 'Unknown')
+            ) %}
+
+            {% set recommendation = segment.get(
+                'recommendation',
+                'No recommendation available.'
+            ) %}
+
+            {% set customers = segment.get(
+                'customers',
+                0
+            ) | int %}
+
+
+            <div class="strategy-card">
+
+                <div class="strategy-card-header">
+
+                    <span class="strategy-rank">
+                        #{{ loop.index }}
+                    </span>
+
+                    <h3>
+                        {{ segment_name }}
+                    </h3>
+
+                </div>
+
+
+                <p>
+                    {{ recommendation }}
+                </p>
+
+
+                <div class="strategy-stat">
+
+                    <span>
+                        Customer Count
+                    </span>
+
+                    <strong>
+                        {{ customers }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- ================================================= -->
+    <!-- EMPTY STATE -->
+    <!-- ================================================= -->
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            ⚖️
+        </div>
+
+        <h2>
+            No Comparison Data
+        </h2>
+
+        <p>
+            Run the customer segmentation model to
+            generate segment comparison data.
+        </p>
+
+        <a
+            href="{{ url_for('upload') }}"
+            class="btn btn-primary"
+        >
+            Upload Dataset
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

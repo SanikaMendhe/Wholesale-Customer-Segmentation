@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}
+Customer Search - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+Customer Search
+{% endblock %}
+
+{% block content %}
+
+<div class="customer-search-page">
+
+    <!-- PAGE HEADER -->
+    <div class="customer-search-header">
+
+        <span class="section-label">
+            CUSTOMER ANALYTICS
+        </span>
+
+        <h1>
+            Search Customers
+        </h1>
+
+        <p>
+            Search customers and open their complete segmentation profile.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH BOX -->
+    <div class="customer-search-box">
+
+        <form method="GET"
+              action="{{ url_for('customer_search') }}"
+              class="customer-search-form">
+
+            <div class="search-input-wrapper">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request.args.get('q', '') }}"
+                    class="customer-search-input"
+                    placeholder="Search by customer ID or name..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="customer-search-button">
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULTS -->
+    <section class="customer-results-section">
+
+        <div class="customer-results-heading">
+
+            <div>
+
+                <span class="section-label">
+                    SEARCH RESULTS
+                </span>
+
+                <h2>
+                    Customer Records
+                </h2>
+
+            </div>
+
+            <span class="customer-results-count">
+                {{ customers|length }} results
+            </span>
+
+        </div>
+
+
+        {% if customers %}
+
+        <div class="customer-grid">
+
+            {% for customer in customers %}
+
+            <!--
+                Calculate Annual Spending from
+                the six wholesale spending features.
+            -->
+
+            {% set fresh = customer.get('Fresh', 0) | float %}
+            {% set milk = customer.get('Milk', 0) | float %}
+            {% set grocery = customer.get('Grocery', 0) | float %}
+            {% set frozen = customer.get('Frozen', 0) | float %}
+            {% set detergents = customer.get('Detergents_Paper', 0) | float %}
+            {% set delicatessen = customer.get('Delicatessen', 0) | float %}
+
+            {% set annual_spending = (
+                fresh
+                + milk
+                + grocery
+                + frozen
+                + detergents
+                + delicatessen
+            ) %}
+
+
+            <div class="customer-card">
+
+                <!-- CARD HEADER -->
+                <div class="customer-card-header">
+
+                    <div class="customer-number">
+                        {{ loop.index }}
+                    </div>
+
+
+                    <div class="customer-card-title">
+
+                        <h3>
+                            {{ customer.get(
+                                'Customer_Name',
+                                'Customer ' ~ '%03d'|format(loop.index)
+                            ) }}
+                        </h3>
+
+                        <span>
+                            {{ customer.get(
+                                'Customer_ID',
+                                'CUST' ~ '%03d'|format(loop.index)
+                            ) }}
+                        </span>
+
+                    </div>
+
+
+                    <span class="customer-cluster">
+
+                        Cluster
+                        {{ customer.get(
+                            'Cluster',
+                            customer.get('cluster', 'N/A')
+                        ) }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- SPENDING -->
+                <div class="customer-spending">
+
+                    <span class="spending-label">
+                        Annual Spending
+                    </span>
+
+                    <strong class="spending-value">
+
+                        ₹{{ "{:,.2f}".format(annual_spending) }}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- SPENDING DETAILS -->
+                <div class="customer-mini-details">
+
+                    <div>
+                        <span>Fresh</span>
+                        <strong>
+                            ₹{{ "{:,.0f}".format(fresh) }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Milk</span>
+                        <strong>
+                            ₹{{ "{:,.0f}".format(milk) }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Grocery</span>
+                        <strong>
+                            ₹{{ "{:,.0f}".format(grocery) }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <!-- PROFILE BUTTON -->
+                <a
+                    href="{{ url_for(
+                        'customer_profile',
+                        index=loop.index0
+                    ) }}"
+                    class="customer-profile-btn">
+
+                    View Complete Profile →
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+        <!-- EMPTY -->
+        <div class="customer-empty">
+
+            <div class="customer-empty-icon">
+                🔍
+            </div>
+
+            <h3>
+                No Customers Found
+            </h3>
+
+            <p>
+                Try searching with a different customer name or ID.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

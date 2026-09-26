@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block title %}
+Customer Segments | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Customer Segments
+{% endblock %}
+
+{% block content %}
+
+<div class="segments-page">
+
+    <!-- ================================================= -->
+    <!-- INTRO -->
+    <!-- ================================================= -->
+
+    <div class="page-intro">
+
+        <div>
+
+            <span class="section-label">
+                CUSTOMER SEGMENTATION
+            </span>
+
+            <h2>
+                Business Customer Segments
+            </h2>
+
+            <p>
+                Clusters are ranked automatically according
+                to average annual spending. Business segment
+                names are not assigned using fixed cluster IDs.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('segment_comparison') }}"
+            class="btn btn-primary"
+        >
+            Compare Segments →
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEGMENT FLOW -->
+    <!-- ================================================= -->
+
+    <div class="segmentation-flow">
+
+        <div class="flow-step">
+
+            <div class="flow-icon">
+                🔵
+            </div>
+
+            <strong>
+                Cluster
+            </strong>
+
+            <span>
+                K-Means output
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="flow-step">
+
+            <div class="flow-icon">
+                💰
+            </div>
+
+            <strong>
+                Average Spending
+            </strong>
+
+            <span>
+                Calculate cluster spending
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="flow-step">
+
+            <div class="flow-icon">
+                🏆
+            </div>
+
+            <strong>
+                Ranking
+            </strong>
+
+            <span>
+                Highest to lowest
+            </span>
+
+        </div>
+
+
+        <div class="flow-arrow">
+            →
+        </div>
+
+
+        <div class="flow-step">
+
+            <div class="flow-icon">
+                👥
+            </div>
+
+            <strong>
+                Business Segment
+            </strong>
+
+            <span>
+                Automatic classification
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEGMENT CARDS -->
+    <!-- ================================================= -->
+
+    <div class="segment-detail-grid">
+
+        {% for segment in segments %}
+
+        {# ----------------------------------------------- #}
+        {# SAFE VALUES                                     #}
+        {# ----------------------------------------------- #}
+
+        {% set customers = segment.get('customers', 0) | int %}
+
+        {% set average_spending = segment.get(
+            'average_spending',
+            segment.get('avg_spending', 0)
+        ) | float %}
+
+        {% set total_spending = segment.get(
+            'total_spending',
+            segment.get('total', 0)
+        ) | float %}
+
+        {% set cluster = segment.get(
+            'cluster',
+            segment.get('Cluster', 'N/A')
+        ) %}
+
+        {% set min_spending = segment.get(
+            'min_spending',
+            segment.get('minimum_spending', 0)
+        ) | float %}
+
+        {% set max_spending = segment.get(
+            'max_spending',
+            segment.get('maximum_spending', 0)
+        ) | float %}
+
+        {% set segment_name = segment.get(
+            'segment',
+            segment.get('Segment', 'Unknown')
+        ) %}
+
+        {% set recommendation = segment.get(
+            'recommendation',
+            'No recommendation available.'
+        ) %}
+
+
+        <div class="segment-detail-card">
+
+            <!-- HEADER -->
+
+            <div class="segment-detail-header">
+
+                <div class="segment-rank">
+                    #{{ loop.index }}
+                </div>
+
+                <span class="segment-badge">
+                    {{ segment_name }}
+                </span>
+
+            </div>
+
+
+            <!-- SEGMENT NAME -->
+
+            <h2>
+                {{ segment_name }}
+            </h2>
+
+
+            <!-- DESCRIPTION -->
+
+            <p class="segment-description">
+
+                {% if segment_name == "High Value" %}
+
+                    Customers with the highest average
+                    annual spending in the analyzed customer base.
+
+                {% elif segment_name == "Regular Value" %}
+
+                    Customers with the next highest level
+                    of average annual spending.
+
+                {% elif segment_name == "Growth Opportunity" %}
+
+                    Customers whose spending level indicates
+                    an opportunity for targeted growth strategies.
+
+                {% elif segment_name == "Low Value" %}
+
+                    Customers with the lowest average annual
+                    spending compared with the other segments.
+
+                {% else %}
+
+                    Customers classified based on their
+                    K-Means clustering and spending profile.
+
+                {% endif %}
+
+            </p>
+
+
+            <!-- ================================================= -->
+            <!-- METRICS -->
+            <!-- ================================================= -->
+
+            <div class="segment-metrics">
+
+
+                <!-- CUSTOMERS -->
+
+                <div>
+
+                    <span>
+                        Customers
+                    </span>
+
+                    <strong>
+                        {{ customers }}
+                    </strong>
+
+                </div>
+
+
+                <!-- AVERAGE SPENDING -->
+
+                <div>
+
+                    <span>
+                        Avg. Spending
+                    </span>
+
+                    <strong>
+                        ₹{{ "{:,.0f}".format(average_spending) }}
+                    </strong>
+
+                </div>
+
+
+                <!-- TOTAL SPENDING -->
+
+                <div>
+
+                    <span>
+                        Total Spending
+                    </span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(total_spending) }}
+                    </strong>
+
+                </div>
+
+
+                <!-- CLUSTER -->
+
+                <div>
+
+                    <span>
+                        Cluster
+                    </span>
+
+                    <strong>
+                        {{ cluster }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- SPENDING RANGE -->
+            <!-- ================================================= -->
+
+            <div class="segment-range">
+
+                <div class="range-header">
+
+                    <span>
+                        Spending Range
+                    </span>
+
+                    <strong>
+
+                        ₹{{ "{:,.0f}".format(min_spending) }}
+
+                        –
+
+                        ₹{{ "{:,.0f}".format(max_spending) }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- RECOMMENDATION -->
+            <!-- ================================================= -->
+
+            <div class="segment-recommendation-large">
+
+                <div class="recommendation-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <span>
+                        RECOMMENDED STRATEGY
+                    </span>
+
+                    <p>
+                        {{ recommendation }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        {% else %}
+
+
+        <!-- ================================================= -->
+        <!-- EMPTY STATE -->
+        <!-- ================================================= -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                👥
+            </div>
+
+            <h2>
+                No Segments Available
+            </h2>
+
+            <p>
+                Upload a valid dataset and run the ML pipeline.
+            </p>
+
+            <a
+                href="{{ url_for('upload') }}"
+                class="btn btn-primary"
+            >
+                Upload Dataset
+            </a>
+
+        </div>
+
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEGMENTING RULE -->
+    <!-- ================================================= -->
+
+    <div class="methodology-card">
+
+        <div class="methodology-icon">
+            🧠
+        </div>
+
+        <div>
+
+            <span class="section-label">
+                SEGMENTATION METHODOLOGY
+            </span>
+
+            <h3>
+                How are business segments created?
+            </h3>
+
+            <p>
+                The application first performs K-Means clustering.
+                It then calculates the average annual spending of
+                every cluster using the six spending features:
+                Fresh, Milk, Grocery, Frozen, Detergents_Paper
+                and Delicatessen. Clusters are ranked from highest
+                to lowest average spending, and business segment
+                names are assigned according to that ranking.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

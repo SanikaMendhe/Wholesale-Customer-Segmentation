@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}
+Business Recommendations | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Business Recommendations
+{% endblock %}
+
+{% block content %}
+
+<div class="recommendations-page">
+
+
+    <!-- ================================================= -->
+    <!-- INTRO -->
+    <!-- ================================================= -->
+
+    <div class="page-intro">
+
+        <div>
+
+            <span class="section-label">
+                BUSINESS INTELLIGENCE
+            </span>
+
+            <h2>
+                Segment-Based Recommendations
+            </h2>
+
+            <p>
+                Use customer spending behavior to design
+                targeted business strategies for each segment.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('segments') }}"
+            class="btn btn-outline"
+        >
+            View Segments
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- RECOMMENDATION FLOW -->
+    <!-- ================================================= -->
+
+    <div class="recommendation-flow">
+
+
+        <div class="recommendation-flow-step">
+
+            <div>
+                1
+            </div>
+
+            <strong>
+                Customer Data
+            </strong>
+
+            <span>
+                Spending behavior
+            </span>
+
+        </div>
+
+
+        <div class="recommendation-flow-arrow">
+            →
+        </div>
+
+
+        <div class="recommendation-flow-step">
+
+            <div>
+                2
+            </div>
+
+            <strong>
+                K-Means
+            </strong>
+
+            <span>
+                Customer clustering
+            </span>
+
+        </div>
+
+
+        <div class="recommendation-flow-arrow">
+            →
+        </div>
+
+
+        <div class="recommendation-flow-step">
+
+            <div>
+                3
+            </div>
+
+            <strong>
+                Segmentation
+            </strong>
+
+            <span>
+                Spending-based ranking
+            </span>
+
+        </div>
+
+
+        <div class="recommendation-flow-arrow">
+            →
+        </div>
+
+
+        <div class="recommendation-flow-step">
+
+            <div>
+                4
+            </div>
+
+            <strong>
+                Action
+            </strong>
+
+            <span>
+                Business strategy
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- RECOMMENDATION CARDS -->
+    <!-- ================================================= -->
+
+    <div class="recommendation-grid">
+
+
+        {% for segment in segments %}
+
+        <div class="recommendation-card">
+
+
+            <div class="recommendation-card-header">
+
+                <div class="recommendation-number">
+                    {{ loop.index }}
+                </div>
+
+                <div>
+
+                    <span class="section-label">
+                        SEGMENT {{ loop.index }}
+                    </span>
+
+                    <h2>
+                        {{ segment.segment }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- Metrics -->
+
+            <div class="recommendation-metrics">
+
+                <div>
+
+                    <span>
+                        Customers
+                    </span>
+
+                    <strong>
+                        {{ segment.customers }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Average Spending
+                    </span>
+
+                    <strong>
+                        {{ "{:,.2f}".format(
+                            segment.average_spending
+                        ) }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Total Spending
+                    </span>
+
+                    <strong>
+                        {{ "{:,.2f}".format(
+                            segment.total_spending
+                        ) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Strategy -->
+
+            <div class="strategy-box">
+
+                <div class="strategy-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <span>
+                        RECOMMENDED STRATEGY
+                    </span>
+
+                    <p>
+                        {{ segment.recommendation }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Segment-specific actions -->
+
+            <div class="action-list">
+
+
+                {% if segment.segment == "High Value" %}
+
+                <div>
+                    <span>✓</span>
+                    Retention campaigns
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Loyalty programs
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Premium offers
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Personalized relationship management
+                </div>
+
+
+                {% elif segment.segment == "Regular Value" %}
+
+                <div>
+                    <span>✓</span>
+                    Repeat purchase campaigns
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Product bundles
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Cross-selling
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Customer engagement campaigns
+                </div>
+
+
+                {% elif segment.segment == "Growth Opportunity" %}
+
+                <div>
+                    <span>✓</span>
+                    Targeted offers
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Cross-selling
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Category expansion
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Personalized promotions
+                </div>
+
+
+                {% elif segment.segment == "Low Value" %}
+
+                <div>
+                    <span>✓</span>
+                    Re-engagement campaigns
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Customer follow-up
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Limited-time offers
+                </div>
+
+                <div>
+                    <span>✓</span>
+                    Low-cost promotional campaigns
+                </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+        {% else %}
+
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                💡
+            </div>
+
+            <h2>
+                No Recommendations Available
+            </h2>
+
+            <p>
+                Run the ML segmentation pipeline first.
+            </p>
+
+            <a
+                href="{{ url_for('upload') }}"
+                class="btn btn-primary"
+            >
+                Upload Dataset
+            </a>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- IMPORTANT NOTE -->
+    <!-- ================================================= -->
+
+    <div class="recommendation-note">
+
+        <div class="recommendation-note-icon">
+            ℹ️
+        </div>
+
+        <div>
+
+            <strong>
+                How recommendations are generated
+            </strong>
+
+            <p>
+                Recommendations are mapped to business
+                segment names. Segment names are determined
+                by ranking clusters according to their average
+                annual spending; cluster IDs are not used to
+                define business meaning.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

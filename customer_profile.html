@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+
+{% block title %}
+Customer Profile | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Customer Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="customer-profile-page">
+
+    <!-- BACK -->
+    <div class="profile-back">
+        <a href="{{ url_for('customer_search') }}" class="profile-back-btn">
+            ← Back to Customers
+        </a>
+    </div>
+
+
+    <!-- =========================================
+         CUSTOMER HEADER
+    ========================================== -->
+
+    <div class="profile-header-card">
+
+        <div class="profile-main-info">
+
+            <div class="large-customer-avatar">
+                👤
+            </div>
+
+            <div class="profile-title-area">
+
+                <span class="section-label">
+                    CUSTOMER PROFILE
+                </span>
+
+                <h2>
+                    Customer {{ customer.get('Customer_ID', customer.get('Customer_Name', 'Profile')) }}
+                </h2>
+
+                <div class="profile-tags">
+
+                    <span class="cluster-tag">
+                        🎯 Cluster {{ customer.get('Cluster', 'N/A') }}
+                    </span>
+
+                    <span class="segment-tag">
+                        {{ customer.get('Segment', 'N/A') }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-spending-highlight">
+
+            <span>
+                ANNUAL SPENDING
+            </span>
+
+            <strong>
+                ₹{{ "{:,.2f}".format(
+                    customer.get('Annual_Spending', 0)|float
+                ) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         KEY METRICS
+    ========================================== -->
+
+    <div class="profile-stats-grid">
+
+        <div class="profile-stat-card">
+
+            <div class="profile-stat-icon">
+                💰
+            </div>
+
+            <div class="profile-stat-content">
+
+                <span>
+                    Total Spending
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.2f}".format(
+                        customer.get('Annual_Spending', 0)|float
+                    ) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-stat-card">
+
+            <div class="profile-stat-icon">
+                🛒
+            </div>
+
+            <div class="profile-stat-content">
+
+                <span>
+                    Orders
+                </span>
+
+                <strong>
+                    {% if customer.get('Orders') is not none %}
+                        {{ customer.get('Orders') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-stat-card">
+
+            <div class="profile-stat-icon">
+                📊
+            </div>
+
+            <div class="profile-stat-content">
+
+                <span>
+                    Average Order Value
+                </span>
+
+                <strong>
+                    {% if customer.get('Average_Order_Value') is not none %}
+                        ₹{{ "{:,.2f}".format(
+                            customer.get('Average_Order_Value')|float
+                        ) }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-stat-card">
+
+            <div class="profile-stat-icon">
+                🎯
+            </div>
+
+            <div class="profile-stat-content">
+
+                <span>
+                    Cluster
+                </span>
+
+                <strong>
+                    {{ customer.get('Cluster', 'N/A') }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         MAIN ANALYSIS
+    ========================================== -->
+
+    <div class="profile-content-grid">
+
+
+        <!-- =====================================
+             SPENDING ANALYSIS
+        ====================================== -->
+
+        <div class="profile-card spending-card">
+
+            <div class="profile-card-header">
+
+                <div>
+                    <span class="section-label">
+                        SPENDING ANALYSIS
+                    </span>
+
+                    <h3>
+                        Category-wise Spending
+                    </h3>
+                </div>
+
+                <span class="profile-card-icon">
+                    💰
+                </span>
+
+            </div>
+
+
+            <div class="spending-breakdown">
+
+                {% for feature in features %}
+
+                <div class="breakdown-item">
+
+                    <div class="breakdown-info">
+
+                        <span>
+                            {{ feature }}
+                        </span>
+
+                        <strong>
+                            ₹{{ "{:,.2f}".format(
+                                customer.get(feature, 0)|float
+                            ) }}
+                        </strong>
+
+                    </div>
+
+
+                    {% set value = customer.get(feature, 0)|float %}
+                    {% set total = customer.get('Annual_Spending', 1)|float %}
+
+                    {% if total > 0 %}
+                        {% set percentage = (value / total * 100) %}
+                    {% else %}
+                        {% set percentage = 0 %}
+                    {% endif %}
+
+                    <div class="breakdown-bar">
+    <progress
+        class="breakdown-progress"
+        value="{{ percentage }}"
+        max="100">
+        {{ "%.1f"|format(percentage) }}%
+    </progress>
+</div>
+
+<div class="breakdown-percent">
+    {{ "%.1f"|format(percentage) }}%
+</div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             SEGMENTATION
+        ====================================== -->
+
+        <div class="profile-card segmentation-card">
+
+            <div class="profile-card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        SEGMENTATION
+                    </span>
+
+                    <h3>
+                        Customer Classification
+                    </h3>
+
+                </div>
+
+                <span class="profile-card-icon">
+                    🎯
+                </span>
+
+            </div>
+
+
+            <div class="classification-box">
+
+                <div class="classification-item">
+
+                    <span>
+                        Cluster
+                    </span>
+
+                    <strong>
+                        {{ customer.get('Cluster', 'N/A') }}
+                    </strong>
+
+                </div>
+
+
+                <div class="classification-item">
+
+                    <span>
+                        Business Segment
+                    </span>
+
+                    <strong>
+                        {{ customer.get('Segment', 'N/A') }}
+                    </strong>
+
+                </div>
+
+
+                <div class="classification-item">
+
+                    <span>
+                        Annual Spending
+                    </span>
+
+                    <strong>
+                        ₹{{ "{:,.2f}".format(
+                            customer.get('Annual_Spending', 0)|float
+                        ) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECOMMENDATION -->
+
+            <div class="recommendation-box">
+
+                <div class="recommendation-icon">
+                    💡
+                </div>
+
+                <div class="recommendation-content">
+
+                    <span>
+                        BUSINESS RECOMMENDATION
+                    </span>
+
+                    <p>
+                        {{ customer.get(
+                            'Recommendation',
+                            'No recommendation available.'
+                        ) }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CUSTOMER DATA
+    ========================================== -->
+
+    <div class="profile-card raw-data-card">
+
+        <div class="profile-card-header">
+
+            <div>
+
+                <span class="section-label">
+                    CUSTOMER DATA
+                </span>
+
+                <h3>
+                    Complete Customer Information
+                </h3>
+
+            </div>
+
+            <span class="profile-card-icon">
+                📋
+            </span>
+
+        </div>
+
+
+        <div class="raw-data-grid">
+
+            {% for key, value in customer.items() %}
+
+            <div class="raw-data-item">
+
+                <span>
+                    {{ key.replace('_', ' ') }}
+                </span>
+
+                <strong>
+
+                    {% if value is none %}
+                        N/A
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         DATA NOTE
+    ========================================== -->
+
+    {% if customer.get('Orders') is none %}
+
+    <div class="info-note">
+
+        <div class="info-note-icon">
+            ℹ️
+        </div>
+
+        <div>
+
+            <strong>
+                Dataset Information
+            </strong>
+
+            <p>
+                Orders and Average Order Value are shown as
+                <b>N/A</b> because these fields are not available
+                in the current dataset.
+            </p>
+
+            <p>
+                The segmentation model uses the six wholesale
+                spending categories provided in the CSV.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+
+{% block title %}
+Performance - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+Performance
+{% endblock %}
+
+{% block content %}
+
+<div class="performance-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <span class="section-label">MODEL EVALUATION</span>
+
+            <h1>Model Performance</h1>
+
+            <p>
+                Evaluate the performance of the K-Means customer
+                segmentation model.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- =========================
+         MAIN PERFORMANCE CARDS
+    ========================== -->
+
+    <div class="stats-grid">
+
+        <!-- BEST K -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎯
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Best K
+                </span>
+
+                <strong class="stat-value">
+                    {{ best_k|default("N/A") }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- SILHOUETTE -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📐
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Silhouette Score
+                </span>
+
+                <strong class="stat-value">
+
+                    {% if silhouette is defined and silhouette != "N/A" %}
+                        {{ "%.4f"|format(silhouette|float) }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- CUSTOMERS -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Customers
+                </span>
+
+                <strong class="stat-value">
+                    {{ total_customers|default(0) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURES -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Features
+                </span>
+
+                <strong class="stat-value">
+                    {{ total_features|default(6) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MODEL EVALUATION
+    ========================== -->
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h2>
+                Model Evaluation
+            </h2>
+
+            <p>
+                The clustering model is evaluated using
+                Inertia and Silhouette Score.
+            </p>
+
+        </div>
+
+
+        <div class="performance-grid">
+
+
+            <!-- INERTIA -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon">
+                    📉
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        Inertia
+                    </span>
+
+                    <strong class="metric-value">
+
+                        {% if inertia is defined and inertia != "N/A" %}
+                            {{ "%.2f"|format(inertia|float) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </strong>
+
+                    <p>
+                        Measures the compactness of the clusters.
+                        Lower inertia generally indicates more compact
+                        clusters for a given K.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SILHOUETTE -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon">
+                    📐
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        Silhouette Score
+                    </span>
+
+                    <strong class="metric-value">
+
+                        {% if silhouette is defined and silhouette != "N/A" %}
+                            {{ "%.4f"|format(silhouette|float) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+
+                    </strong>
+
+                    <p>
+                        Measures how well-separated and cohesive
+                        the customer clusters are.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- EXECUTION TIME -->
+
+            <div class="metric-card">
+
+                <div class="metric-icon">
+                    ⚡
+                </div>
+
+                <div class="metric-content">
+
+                    <span class="metric-label">
+                        Execution Time
+                    </span>
+
+                    <strong class="metric-value">
+                        {{ execution_time|default("N/A") }}
+                    </strong>
+
+                    <p>
+                        Time required to execute the ML
+                        segmentation process.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         K COMPARISON
+    ========================== -->
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h2>
+                K Comparison
+            </h2>
+
+            <p>
+                Performance of K-Means for different K values.
+            </p>
+
+        </div>
+
+
+        {% if k_results is defined and k_results %}
+
+        <div class="table-container">
+
+            <table class="data-table performance-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            K
+                        </th>
+
+                        <th>
+                            Inertia
+                        </th>
+
+                        <th>
+                            Silhouette Score
+                        </th>
+
+                        <th>
+                            Selection
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for result in k_results %}
+
+                    <tr
+                        {% if result.k|int == best_k|int %}
+                            class="selected-k-row"
+                        {% endif %}
+                    >
+
+                        <!-- K -->
+
+                        <td>
+
+                            <strong>
+                                {{ result.k|default("N/A") }}
+                            </strong>
+
+                        </td>
+
+
+                        <!-- INERTIA -->
+
+                        <td>
+
+                            {% if result.inertia is defined %}
+                                {{ "%.2f"|format(result.inertia|float) }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- SILHOUETTE -->
+
+                        <td>
+
+                            {% if result.silhouette is defined %}
+
+                                <span class="score-badge">
+
+                                    {{ "%.4f"|format(
+                                        result.silhouette|float
+                                    ) }}
+
+                                </span>
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- SELECTION -->
+
+                        <td>
+
+                            {% if result.k|int == best_k|int %}
+
+                                <span class="status-badge status-success">
+                                    ✓ Best K
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-neutral">
+                                    Tested
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                📊
+            </div>
+
+            <h3>
+                No Performance Data
+            </h3>
+
+            <p>
+                Run the segmentation pipeline to generate
+                model performance results.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         SILHOUETTE EXPLANATION
+    ========================== -->
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h2>
+                Silhouette Score Interpretation
+            </h2>
+
+            <p>
+                Silhouette Score helps evaluate the quality of
+                customer cluster separation.
+            </p>
+
+        </div>
+
+
+        <div class="info-grid">
+
+
+            <!-- LOWER -->
+
+            <div class="info-box">
+
+                <div class="info-box-icon">
+                    🔴
+                </div>
+
+                <h3>
+                    Lower Score
+                </h3>
+
+                <p>
+                    A lower score indicates that customer groups
+                    may overlap more strongly.
+                </p>
+
+            </div>
+
+
+            <!-- MODERATE -->
+
+            <div class="info-box">
+
+                <div class="info-box-icon">
+                    🟡
+                </div>
+
+                <h3>
+                    Moderate Score
+                </h3>
+
+                <p>
+                    Customers show some meaningful separation
+                    between clusters.
+                </p>
+
+            </div>
+
+
+            <!-- HIGHER -->
+
+            <div class="info-box">
+
+                <div class="info-box-icon">
+                    🟢
+                </div>
+
+                <h3>
+                    Higher Score
+                </h3>
+
+                <p>
+                    Higher values indicate better-defined
+                    cluster separation.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FINAL MODEL
+    ========================== -->
+
+    <div class="section-card">
+
+        <div class="notice-box">
+
+            <div class="notice-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h3>
+                    Selected Model
+                </h3>
+
+                <p>
+
+                    K-Means clustering with
+
+                    <strong>
+                        K = {{ best_k|default("N/A") }}
+                    </strong>
+
+                    is used for the final customer
+                    segmentation.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

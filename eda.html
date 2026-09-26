@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}EDA - Customer Segmentation{% endblock %}
+
+{% block page_heading %}
+EDA
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <span class="section-label">DATA ANALYSIS</span>
+
+        <h1>Exploratory Data Analysis</h1>
+
+        <p>
+            Explore customer spending patterns, statistical behaviour,
+            and relationships between spending categories.
+        </p>
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DESCRIPTIVE STATISTICS
+     ========================================================= -->
+
+<div class="section-card">
+
+    <div class="section-title">
+
+        <span class="section-label">STATISTICAL SUMMARY</span>
+
+        <h2>Descriptive Statistics</h2>
+
+        <p>
+            Statistical summary of the customer dataset.
+        </p>
+
+    </div>
+
+
+    {% if statistics %}
+
+    <div class="table-container">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+                    <th>Feature</th>
+                    <th>Mean</th>
+                    <th>Median</th>
+                    <th>Minimum</th>
+                    <th>Maximum</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for row in statistics %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ row.get('feature', 'N/A') }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ "%.2f"|format(row.get('mean', 0)|float) }}
+                    </td>
+
+                    <td>
+                        {{ "%.2f"|format(row.get('median', 0)|float) }}
+                    </td>
+
+                    <td>
+                        {{ "%.2f"|format(row.get('min', 0)|float) }}
+                    </td>
+
+                    <td>
+                        {{ "%.2f"|format(row.get('max', 0)|float) }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">📊</div>
+
+        <h3>No Statistical Data</h3>
+
+        <p>
+            Upload a valid customer dataset to perform EDA.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     FEATURE CORRELATION
+     ========================================================= -->
+
+<div class="section-card">
+
+    <div class="section-title">
+
+        <span class="section-label">RELATIONSHIP ANALYSIS</span>
+
+        <h2>Feature Correlation</h2>
+
+        <p>
+            Correlation shows how strongly two spending categories are related.
+        </p>
+
+    </div>
+
+
+    {% if correlation %}
+
+    <div class="table-container">
+
+        <table class="data-table correlation-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Feature</th>
+
+                    {% for column in correlation.keys() %}
+
+                    <th>
+                        {{ column }}
+                    </th>
+
+                    {% endfor %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row_name, row_values in correlation.items() %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ row_name }}
+                        </strong>
+                    </td>
+
+
+                    {% for column in correlation.keys() %}
+
+                    {% set value = row_values.get(column, 0)|float %}
+
+                    <td>
+
+                        <span class="
+                            correlation-value
+                            {% if value >= 0.7 %}
+                                correlation-high
+                            {% elif value >= 0.3 %}
+                                correlation-medium
+                            {% elif value <= -0.3 %}
+                                correlation-negative
+                            {% else %}
+                                correlation-low
+                            {% endif %}
+                        ">
+
+                            {{ "%.2f"|format(value) }}
+
+                        </span>
+
+                    </td>
+
+                    {% endfor %}
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">🔗</div>
+
+        <h3>No Correlation Data</h3>
+
+        <p>
+            Correlation information will appear after the dataset is loaded.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     EDA INSIGHTS
+     ========================================================= -->
+
+<div class="section-card">
+
+    <div class="section-title">
+
+        <span class="section-label">KEY FINDINGS</span>
+
+        <h2>EDA Insights & Interpretation</h2>
+
+        <p>
+            Key observations that help understand customer purchasing
+            behaviour before applying K-Means clustering.
+        </p>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <!-- Positive Relationship -->
+
+        <div class="info-box">
+
+            <div class="info-box-icon">
+                📈
+            </div>
+
+            <h3>
+                Positive Relationship
+            </h3>
+
+            <p>
+                When one spending category increases and another category
+                also tends to increase, they show a positive relationship.
+            </p>
+
+        </div>
+
+
+        <!-- Negative Relationship -->
+
+        <div class="info-box">
+
+            <div class="info-box-icon">
+                📉
+            </div>
+
+            <h3>
+                Negative Relationship
+            </h3>
+
+            <p>
+                When one category increases while another tends to decrease,
+                the relationship is negative.
+            </p>
+
+        </div>
+
+
+        <!-- Weak Relationship -->
+
+        <div class="info-box">
+
+            <div class="info-box-icon">
+                🔗
+            </div>
+
+            <h3>
+                Weak Relationship
+            </h3>
+
+            <p>
+                A correlation value close to zero indicates a weak linear
+                relationship between the two spending categories.
+            </p>
+
+        </div>
+
+
+        <!-- Clustering Preparation -->
+
+        <div class="info-box">
+
+            <div class="info-box-icon">
+                🎯
+            </div>
+
+            <h3>
+                Clustering Preparation
+            </h3>
+
+            <p>
+                EDA helps understand customer spending behaviour before
+                applying the K-Means clustering algorithm.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Dataset Observation -->
+
+    <div class="eda-observation">
+
+        <div class="eda-observation-icon">
+            📊
+        </div>
+
+        <div>
+
+            <h3>
+                Dataset Observation
+            </h3>
+
+            <p>
+                The correlation values in this dataset are mostly close to
+                zero, indicating weak linear relationships between the
+                different spending categories.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

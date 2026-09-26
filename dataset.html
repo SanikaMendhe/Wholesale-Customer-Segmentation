@@ -1,0 +1,696 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dataset Analysis | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Dataset Analysis
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+    <div class="page-header">
+
+        <div>
+
+            <span class="section-label">
+                DATASET ANALYSIS
+            </span>
+
+            <h1>
+                Wholesale Customer Dataset
+            </h1>
+
+            <p>
+                Explore customer spending data used for
+                machine learning based customer segmentation.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         DATASET SUMMARY
+    ========================================================== -->
+    <div class="stats-grid">
+
+        <!-- TOTAL CUSTOMERS -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <span class="stat-label">
+                    TOTAL CUSTOMERS
+                </span>
+
+                <h2>
+                    {{ total_rows }}
+                </h2>
+
+                <small>
+                    Customer records
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL COLUMNS -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <div>
+
+                <span class="stat-label">
+                    TOTAL COLUMNS
+                </span>
+
+                <h2>
+                    {{ total_columns }}
+                </h2>
+
+                <small>
+                    Dataset attributes
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- ML FEATURES -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🧠
+            </div>
+
+            <div>
+
+                <span class="stat-label">
+                    ML FEATURES
+                </span>
+
+                <h2>
+                    {{ features|length }}
+                </h2>
+
+                <small>
+                    Features used for clustering
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- DATA SOURCE -->
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📁
+            </div>
+
+            <div>
+
+                <span class="stat-label">
+                    DATA SOURCE
+                </span>
+
+                <h2>
+                    CSV
+                </h2>
+
+                <small>
+                    Uploaded customer dataset
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SELECTED ML FEATURES
+    ========================================================== -->
+    <div class="section-card">
+
+        <div class="section-card-header">
+
+            <div>
+
+                <span class="section-label">
+                    MACHINE LEARNING
+                </span>
+
+                <h2>
+                    Selected Features
+                </h2>
+
+                <p>
+                    The following six spending categories are
+                    used by the K-Means clustering algorithm.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-list">
+
+            {% for feature in features %}
+
+            <div class="feature-item">
+
+                <span class="feature-check">
+                    ✓
+                </span>
+
+                <span>
+                    {{ feature }}
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         DATASET TABLE
+    ========================================================== -->
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <div>
+
+                <span class="section-label">
+                    CUSTOMER DATA
+                </span>
+
+                <h2>
+                    Dataset Preview
+                </h2>
+
+                <p>
+                    Browse and search customer records from
+                    the uploaded CSV dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if data %}
+
+        <!-- =====================================================
+             SEARCH BAR
+        ====================================================== -->
+        <div class="table-tools">
+
+            <div class="search-box">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="datasetSearch"
+                    class="form-control"
+                    placeholder="Search customer data..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TABLE
+        ====================================================== -->
+        <div class="table-wrapper">
+
+            <table
+                class="data-table"
+                id="datasetTable"
+            >
+
+                <thead>
+
+                    <tr>
+
+                        {% for column in columns %}
+
+                        <th>
+                            {{ column }}
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in data %}
+
+                    <tr>
+
+                        {% for column in columns %}
+
+                        <td>
+                            {{ row[column] }}
+                        </td>
+
+                        {% endfor %}
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =====================================================
+             TABLE RESULT MESSAGE
+        ====================================================== -->
+        <div
+            id="noSearchResults"
+            class="empty-state"
+            style="display: none;"
+        >
+
+            <div class="empty-icon">
+                🔍
+            </div>
+
+            <h3>
+                No Matching Records
+            </h3>
+
+            <p>
+                No customer record matches your search.
+                Try another keyword.
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- =====================================================
+             NO DATASET
+        ====================================================== -->
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                📂
+            </div>
+
+            <h3>
+                No Dataset Found
+            </h3>
+
+            <p>
+                No customer dataset is currently available.
+            </p>
+
+            <p>
+                Use the
+                <strong>Upload Dataset</strong>
+                option from the sidebar to upload your CSV file.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================================================
+         DATASET PROCESSING INFORMATION
+    ========================================================== -->
+    <div class="notice">
+
+        <div class="notice-icon">
+            ℹ️
+        </div>
+
+        <div>
+
+            <h3>
+                Dataset Processing Pipeline
+            </h3>
+
+            <p>
+                Before machine learning, the dataset goes through
+                an automatic preprocessing pipeline.
+            </p>
+
+            <div class="process-flow">
+
+                <div class="process-step">
+
+                    <span class="process-number">
+                        1
+                    </span>
+
+                    <span>
+                        Missing Values
+                    </span>
+
+                </div>
+
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+
+                <div class="process-step">
+
+                    <span class="process-number">
+                        2
+                    </span>
+
+                    <span>
+                        Numeric Conversion
+                    </span>
+
+                </div>
+
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+
+                <div class="process-step">
+
+                    <span class="process-number">
+                        3
+                    </span>
+
+                    <span>
+                        Negative Values
+                    </span>
+
+                </div>
+
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+
+                <div class="process-step">
+
+                    <span class="process-number">
+                        4
+                    </span>
+
+                    <span>
+                        Feature Selection
+                    </span>
+
+                </div>
+
+
+                <div class="process-arrow">
+                    →
+                </div>
+
+
+                <div class="process-step">
+
+                    <span class="process-number">
+                        5
+                    </span>
+
+                    <span>
+                        StandardScaler
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ML FEATURES INFORMATION
+    ========================================================== -->
+    <div class="section-card">
+
+        <div class="section-card-header">
+
+            <div>
+
+                <span class="section-label">
+                    CLUSTERING INPUT
+                </span>
+
+                <h2>
+                    Customer Spending Variables
+                </h2>
+
+                <p>
+                    These variables represent the annual spending
+                    behavior of each wholesale customer.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-grid">
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    🥬
+                </div>
+
+                <h3>
+                    Fresh
+                </h3>
+
+                <p>
+                    Annual spending on fresh products.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    🥛
+                </div>
+
+                <h3>
+                    Milk
+                </h3>
+
+                <p>
+                    Annual spending on milk products.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    🛒
+                </div>
+
+                <h3>
+                    Grocery
+                </h3>
+
+                <p>
+                    Annual spending on grocery products.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    ❄️
+                </div>
+
+                <h3>
+                    Frozen
+                </h3>
+
+                <p>
+                    Annual spending on frozen products.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    🧴
+                </div>
+
+                <h3>
+                    Detergents_Paper
+                </h3>
+
+                <p>
+                    Annual spending on detergents and paper products.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="feature-icon">
+                    🍽️
+                </div>
+
+                <h3>
+                    Delicatessen
+                </h3>
+
+                <p>
+                    Annual spending on delicatessen products.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =============================================================
+     DATASET SEARCH JAVASCRIPT
+============================================================= -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("datasetSearch");
+
+    const table =
+        document.getElementById("datasetTable");
+
+    const noResults =
+        document.getElementById("noSearchResults");
+
+
+    /*
+     * If dataset is not available,
+     * search elements will not exist.
+     */
+    if (!searchInput || !table) {
+        return;
+    }
+
+
+    searchInput.addEventListener("input", function () {
+
+        const searchValue =
+            searchInput.value.trim().toLowerCase();
+
+        const rows =
+            table.querySelectorAll("tbody tr");
+
+        let visibleRows = 0;
+
+
+        rows.forEach(function (row) {
+
+            const rowText =
+                row.textContent.toLowerCase();
+
+
+            if (rowText.includes(searchValue)) {
+
+                row.style.display = "";
+
+                visibleRows++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        /*
+         * Show "No Matching Records"
+         * when search has no results.
+         */
+        if (visibleRows === 0 && searchValue !== "") {
+
+            if (noResults) {
+                noResults.style.display = "block";
+            }
+
+        } else {
+
+            if (noResults) {
+                noResults.style.display = "none";
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

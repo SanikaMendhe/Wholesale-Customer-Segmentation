@@ -1,0 +1,489 @@
+{% extends "base.html" %}
+
+{% block title %}
+K Selection - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+K Selection
+{% endblock %}
+
+{% block content %}
+
+<div class="k-selection-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="k-selection-header">
+
+        <div>
+
+            <span class="section-label">
+                MODEL SELECTION
+            </span>
+
+            <h1>
+                K Selection
+            </h1>
+
+            <p>
+                Compare K values from 2 to 8 using Inertia and
+                Silhouette Score to determine the appropriate number
+                of customer clusters.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SELECTED BEST K -->
+
+    <div class="best-k-card">
+
+        <div class="best-k-icon">
+            🎯
+        </div>
+
+        <div class="best-k-content">
+
+            <span>
+                SELECTED BEST K
+            </span>
+
+            <strong>
+                K = {{ best_k|default(8) }}
+            </strong>
+
+            <p>
+                The K value is selected using the highest
+                Silhouette Score.
+            </p>
+
+        </div>
+
+        <div class="best-k-score">
+
+            <span>
+                Best Silhouette
+            </span>
+
+            <strong>
+                {{ "%.4f"|format(best_silhouette|default(0.1621)|float) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- K EVALUATION -->
+
+    <div class="k-section">
+
+        <div class="k-section-header">
+
+            <span class="section-label">
+                MODEL EVALUATION
+            </span>
+
+            <h2>
+                K Evaluation Results
+            </h2>
+
+            <p>
+                Each K value is tested using K-Means clustering.
+            </p>
+
+        </div>
+
+
+        {% if results %}
+
+        <div class="k-table-wrapper">
+
+            <table class="k-table">
+
+                <thead>
+
+                    <tr>
+                        <th>K</th>
+                        <th>Inertia</th>
+                        <th>Silhouette Score</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for row in results %}
+
+                    <tr
+                        {% if row.k|int == best_k|default(8)|int %}
+                        class="selected-k-row"
+                        {% endif %}
+                    >
+
+                        <td>
+                            <strong>
+                                {{ row.k }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(row.inertia|float) }}
+                        </td>
+
+                        <td>
+                            <span class="silhouette-value">
+                                {{ "%.4f"|format(row.silhouette|float) }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            {% if row.k|int == best_k|default(8)|int %}
+
+                            <span class="k-status selected">
+                                Selected
+                            </span>
+
+                            {% else %}
+
+                            <span class="k-status tested">
+                                Tested
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <!-- Fallback for current dataset -->
+
+        <div class="k-table-wrapper">
+
+            <table class="k-table">
+
+                <thead>
+
+                    <tr>
+                        <th>K</th>
+                        <th>Inertia</th>
+                        <th>Silhouette Score</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>1530.55</td>
+                        <td>0.1450</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>1353.54</td>
+                        <td>0.1395</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>1229.46</td>
+                        <td>0.1438</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>1138.11</td>
+                        <td>0.1479</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>1050.75</td>
+                        <td>0.1548</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>984.81</td>
+                        <td>0.1585</td>
+                        <td><span class="k-status tested">Tested</span></td>
+                    </tr>
+
+                    <tr class="selected-k-row">
+                        <td><strong>8</strong></td>
+                        <td>932.81</td>
+                        <td>
+                            <span class="silhouette-value">
+                                0.1621
+                            </span>
+                        </td>
+                        <td>
+                            <span class="k-status selected">
+                                Selected
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- HOW BEST K IS SELECTED -->
+
+    <div class="k-section">
+
+        <div class="k-section-header">
+
+            <span class="section-label">
+                MODEL SELECTION LOGIC
+            </span>
+
+            <h2>
+                How Best K Is Selected
+            </h2>
+
+            <p>
+                Two evaluation measures are used to understand
+                clustering quality.
+            </p>
+
+        </div>
+
+
+        <div class="k-method-grid">
+
+
+            <!-- INERTIA -->
+
+            <div class="k-method-card">
+
+                <div class="k-method-icon">
+                    📉
+                </div>
+
+                <h3>
+                    Inertia
+                </h3>
+
+                <p>
+                    Inertia measures the sum of squared distances
+                    between customers and their assigned cluster
+                    centers.
+                </p>
+
+                <div class="method-note">
+                    Lower inertia indicates more compact clusters.
+                </div>
+
+            </div>
+
+
+            <!-- SILHOUETTE -->
+
+            <div class="k-method-card">
+
+                <div class="k-method-icon">
+                    📐
+                </div>
+
+                <h3>
+                    Silhouette Score
+                </h3>
+
+                <p>
+                    Silhouette Score measures how well customers fit
+                    inside their assigned clusters compared with
+                    other clusters.
+                </p>
+
+                <div class="method-note">
+                    Higher score indicates better cluster separation.
+                </div>
+
+            </div>
+
+
+            <!-- BEST K -->
+
+            <div class="k-method-card">
+
+                <div class="k-method-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Best K
+                </h3>
+
+                <p>
+                    The application selects the K value with the
+                    highest Silhouette Score.
+                </p>
+
+                <div class="method-note">
+                    Current selected value: K = {{ best_k|default(8) }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- WORKFLOW -->
+
+    <div class="k-section">
+
+        <div class="k-section-header">
+
+            <span class="section-label">
+                CLUSTERING WORKFLOW
+            </span>
+
+            <h2>
+                K-Means Selection Workflow
+            </h2>
+
+        </div>
+
+
+        <div class="k-workflow">
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-number">
+                    1
+                </div>
+
+                <div class="workflow-icon">
+                    🔢
+                </div>
+
+                <h3>
+                    K = 2
+                </h3>
+
+                <p>
+                    Test initial clustering.
+                </p>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-number">
+                    2
+                </div>
+
+                <div class="workflow-icon">
+                    🔄
+                </div>
+
+                <h3>
+                    K = 3 to 8
+                </h3>
+
+                <p>
+                    Test different cluster counts.
+                </p>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-number">
+                    3
+                </div>
+
+                <div class="workflow-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Compare Scores
+                </h3>
+
+                <p>
+                    Compare silhouette values.
+                </p>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-number">
+                    4
+                </div>
+
+                <div class="workflow-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Best K
+                </h3>
+
+                <p>
+                    Select the highest silhouette.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

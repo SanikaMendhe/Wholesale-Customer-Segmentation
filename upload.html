@@ -1,0 +1,632 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upload Dataset | Wholesale AI
+{% endblock %}
+
+{% block page_heading %}
+Upload Dataset
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <span class="section-label">
+                DATA MANAGEMENT
+            </span>
+
+            <h1>
+                Upload Customer Dataset
+            </h1>
+
+            <p>
+                Upload your wholesale customer CSV file to
+                start customer segmentation and machine
+                learning analysis.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         UPLOAD CARD
+         ===================================================== -->
+
+    <div class="upload-container">
+
+        <div class="upload-card">
+
+
+            <!-- ICON -->
+
+            <div class="upload-main-icon">
+                📂
+            </div>
+
+
+            <h2>
+                Upload CSV Dataset
+            </h2>
+
+
+            <p class="upload-description">
+                Select your wholesale customer dataset in
+                CSV format. The system will automatically
+                validate and process the data.
+            </p>
+
+
+            <!-- =================================================
+                 UPLOAD FORM
+                 ================================================= -->
+
+            <form
+                method="POST"
+                action="{{ url_for('upload') }}"
+                enctype="multipart/form-data"
+                id="uploadForm"
+            >
+
+
+                <!-- FILE AREA -->
+
+                <div
+                    class="upload-area"
+                    id="uploadArea"
+                >
+
+                    <div class="upload-icon">
+                        ☁️
+                    </div>
+
+
+                    <h3>
+                        Choose your CSV file
+                    </h3>
+
+
+                    <p>
+                        Drag & drop your file here
+                        or click below
+                    </p>
+
+
+                    <!-- FILE INPUT -->
+
+                    <input
+                        type="file"
+                        name="file"
+                        id="datasetFile"
+                        accept=".csv,text/csv"
+                        hidden
+                        required
+                    >
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline"
+                        id="chooseFileButton"
+                    >
+                        Choose CSV File
+                    </button>
+
+
+                    <!-- SELECTED FILE -->
+
+                    <div
+                        id="selectedFile"
+                        class="selected-file"
+                        style="display:none;"
+                    >
+
+                        <span>
+                            📄
+                        </span>
+
+                        <strong id="fileName">
+                            No file selected
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     REQUIRED COLUMNS
+                     ================================================= -->
+
+                <div class="upload-requirements">
+
+                    <h3>
+                        Required Dataset Columns
+                    </h3>
+
+                    <p>
+                        Your CSV file must contain these
+                        six columns:
+                    </p>
+
+
+                    <div class="required-columns">
+
+                        <span>
+                            ✓ Fresh
+                        </span>
+
+                        <span>
+                            ✓ Milk
+                        </span>
+
+                        <span>
+                            ✓ Grocery
+                        </span>
+
+                        <span>
+                            ✓ Frozen
+                        </span>
+
+                        <span>
+                            ✓ Detergents_Paper
+                        </span>
+
+                        <span>
+                            ✓ Delicatessen
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     UPLOAD BUTTON
+                     ================================================= -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary upload-submit"
+                    id="uploadButton"
+                    disabled
+                >
+
+                    ⬆️
+                    Upload Dataset
+
+                </button>
+
+
+                <!-- STATUS -->
+
+                <p
+                    id="uploadStatus"
+                    class="upload-status"
+                ></p>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- =====================================================
+             ML PIPELINE
+             ===================================================== -->
+
+        <div class="upload-info-card">
+
+            <span class="section-label">
+                MACHINE LEARNING PIPELINE
+            </span>
+
+            <h2>
+                What happens after upload?
+            </h2>
+
+            <p>
+                Once your dataset is uploaded, the system
+                automatically performs the following steps.
+            </p>
+
+
+            <div class="upload-pipeline">
+
+
+                <!-- STEP 1 -->
+
+                <div class="pipeline-item">
+
+                    <div class="pipeline-number">
+                        1
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Data Validation
+                        </h3>
+
+                        <p>
+                            Checks whether all required
+                            columns are available.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+
+                <div class="pipeline-item">
+
+                    <div class="pipeline-number">
+                        2
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Data Preprocessing
+                        </h3>
+
+                        <p>
+                            Handles missing values, numeric
+                            conversion and negative values.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+
+                <div class="pipeline-item">
+
+                    <div class="pipeline-number">
+                        3
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Feature Scaling
+                        </h3>
+
+                        <p>
+                            StandardScaler is applied to
+                            the selected ML features.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 4 -->
+
+                <div class="pipeline-item">
+
+                    <div class="pipeline-number">
+                        4
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            K-Means Clustering
+                        </h3>
+
+                        <p>
+                            Different K values are evaluated
+                            using inertia and silhouette score.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 5 -->
+
+                <div class="pipeline-item">
+
+                    <div class="pipeline-number">
+                        5
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Business Segmentation
+                        </h3>
+
+                        <p>
+                            Customers are converted into
+                            meaningful business segments.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const fileInput =
+        document.getElementById("datasetFile");
+
+    const chooseButton =
+        document.getElementById("chooseFileButton");
+
+    const uploadArea =
+        document.getElementById("uploadArea");
+
+    const uploadButton =
+        document.getElementById("uploadButton");
+
+    const selectedFile =
+        document.getElementById("selectedFile");
+
+    const fileName =
+        document.getElementById("fileName");
+
+    const uploadStatus =
+        document.getElementById("uploadStatus");
+
+
+    /* =====================================================
+       CHOOSE FILE BUTTON
+       ===================================================== */
+
+    chooseButton.addEventListener("click", function () {
+
+        fileInput.click();
+
+    });
+
+
+    /* =====================================================
+       FILE SELECTED
+       ===================================================== */
+
+    fileInput.addEventListener("change", function () {
+
+        if (!fileInput.files.length) {
+
+            uploadButton.disabled = true;
+
+            selectedFile.style.display = "none";
+
+            return;
+
+        }
+
+
+        const file =
+            fileInput.files[0];
+
+
+        /* Check CSV */
+
+        const fileNameLower =
+            file.name.toLowerCase();
+
+
+        if (!fileNameLower.endsWith(".csv")) {
+
+            uploadStatus.textContent =
+                "Please select a CSV file.";
+
+            uploadStatus.style.display = "block";
+
+            uploadButton.disabled = true;
+
+            fileInput.value = "";
+
+            selectedFile.style.display = "none";
+
+            return;
+
+        }
+
+
+        /* Show selected file */
+
+        fileName.textContent =
+            file.name;
+
+        selectedFile.style.display =
+            "flex";
+
+
+        uploadStatus.textContent =
+            "CSV file selected successfully.";
+
+        uploadStatus.style.display =
+            "block";
+
+
+        uploadButton.disabled =
+            false;
+
+    });
+
+
+    /* =====================================================
+       DRAG OVER
+       ===================================================== */
+
+    uploadArea.addEventListener(
+        "dragover",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadArea.classList.add(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       DRAG LEAVE
+       ===================================================== */
+
+    uploadArea.addEventListener(
+        "dragleave",
+        function () {
+
+            uploadArea.classList.remove(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       DROP FILE
+       ===================================================== */
+
+    uploadArea.addEventListener(
+        "drop",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadArea.classList.remove(
+                "drag-over"
+            );
+
+
+            const files =
+                event.dataTransfer.files;
+
+
+            if (!files.length) {
+                return;
+            }
+
+
+            const file =
+                files[0];
+
+
+            if (
+                !file.name
+                    .toLowerCase()
+                    .endsWith(".csv")
+            ) {
+
+                uploadStatus.textContent =
+                    "Please drop a CSV file only.";
+
+                uploadStatus.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            /*
+             * Put dropped file into
+             * the file input.
+             */
+
+            const dataTransfer =
+                new DataTransfer();
+
+            dataTransfer.items.add(file);
+
+            fileInput.files =
+                dataTransfer.files;
+
+
+            fileName.textContent =
+                file.name;
+
+            selectedFile.style.display =
+                "flex";
+
+            uploadButton.disabled =
+                false;
+
+
+            uploadStatus.textContent =
+                "CSV file selected successfully.";
+
+            uploadStatus.style.display =
+                "block";
+
+        }
+    );
+
+
+    /* =====================================================
+       FORM SUBMIT
+       ===================================================== */
+
+    document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function () {
+
+            if (!fileInput.files.length) {
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+
+            uploadButton.disabled =
+                true;
+
+            uploadButton.innerHTML =
+                "⏳ Processing Dataset...";
+
+
+            uploadStatus.textContent =
+                "Uploading and processing your dataset...";
+
+            uploadStatus.style.display =
+                "block";
+
+        });
+
+});
+
+</script>
+
+{% endblock %}

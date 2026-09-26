@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+
+{% block title %}
+Data Preprocessing - Customer Segmentation
+{% endblock %}
+
+
+{% block page_heading %}
+Preprocessing
+{% endblock %}
+
+
+{% block content %}
+
+<div class="preprocessing-page">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="preprocessing-header">
+
+        <div>
+
+            <span class="section-label">
+                DATA PREPARATION
+            </span>
+
+            <h1>
+                Data Preprocessing
+            </h1>
+
+            <p>
+                Prepare customer spending data before applying the
+                K-Means clustering algorithm.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PREPROCESSING PIPELINE
+         ===================================================== -->
+
+    <div class="preprocessing-section">
+
+        <div class="preprocessing-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    PREPROCESSING PIPELINE
+                </span>
+
+                <h2>
+                    Data Preparation Workflow
+                </h2>
+
+                <p>
+                    The dataset follows the preprocessing steps required
+                    for K-Means clustering.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="pipeline-grid">
+
+
+            <!-- STEP 1 -->
+
+            <div class="pipeline-card">
+
+                <div class="pipeline-number">
+                    1
+                </div>
+
+                <div class="pipeline-icon">
+                    🔍
+                </div>
+
+                <h3>
+                    Missing Values
+                </h3>
+
+                <p>
+                    Detect and handle missing values in the dataset.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- STEP 2 -->
+
+            <div class="pipeline-card">
+
+                <div class="pipeline-number">
+                    2
+                </div>
+
+                <div class="pipeline-icon">
+                    🔢
+                </div>
+
+                <h3>
+                    Numeric Conversion
+                </h3>
+
+                <p>
+                    Convert spending columns into numeric values.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- STEP 3 -->
+
+            <div class="pipeline-card">
+
+                <div class="pipeline-number">
+                    3
+                </div>
+
+                <div class="pipeline-icon">
+                    ⚠️
+                </div>
+
+                <h3>
+                    Negative Values
+                </h3>
+
+                <p>
+                    Negative spending values are converted to zero.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- STEP 4 -->
+
+            <div class="pipeline-card">
+
+                <div class="pipeline-number">
+                    4
+                </div>
+
+                <div class="pipeline-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Feature Selection
+                </h3>
+
+                <p>
+                    Select the six spending features used for ML.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- STEP 5 -->
+
+            <div class="pipeline-card">
+
+                <div class="pipeline-number">
+                    5
+                </div>
+
+                <div class="pipeline-icon">
+                    📏
+                </div>
+
+                <h3>
+                    StandardScaler
+                </h3>
+
+                <p>
+                    Scale features so that their values become comparable.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATASET SUMMARY
+         ===================================================== -->
+
+    <div class="preprocessing-section">
+
+        <div class="preprocessing-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    DATASET SUMMARY
+                </span>
+
+                <h2>
+                    Dataset Before & After Cleaning
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="preprocessing-stats">
+
+
+            <!-- ORIGINAL ROWS -->
+
+            <div class="preprocessing-stat-card">
+
+                <div class="preprocessing-stat-icon">
+                    📄
+                </div>
+
+                <div>
+
+                    <span>
+                        Original Rows
+                    </span>
+
+                    <strong>
+                        {{ original_rows|default(300) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLEANED ROWS -->
+
+            <div class="preprocessing-stat-card">
+
+                <div class="preprocessing-stat-icon">
+                    🧹
+                </div>
+
+                <div>
+
+                    <span>
+                        Cleaned Rows
+                    </span>
+
+                    <strong>
+                        {{ cleaned_rows|default(300) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEATURES -->
+
+            <div class="preprocessing-stat-card">
+
+                <div class="preprocessing-stat-icon">
+                    📊
+                </div>
+
+                <div>
+
+                    <span>
+                        Selected Features
+                    </span>
+
+                    <strong>
+                        {{ selected_features|default(6) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- COLUMNS -->
+
+            <div class="preprocessing-stat-card">
+
+                <div class="preprocessing-stat-icon">
+                    🔢
+                </div>
+
+                <div>
+
+                    <span>
+                        Original Columns
+                    </span>
+
+                    <strong>
+                        {{ original_columns|default(13) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MISSING VALUES
+         ===================================================== -->
+
+    <div class="preprocessing-section">
+
+        <div class="preprocessing-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    DATA QUALITY
+                </span>
+
+                <h2>
+                    Missing Values Analysis
+                </h2>
+
+                <p>
+                    Missing values are checked before and after preprocessing.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="missing-grid">
+
+
+            <!-- BEFORE -->
+
+            <div class="missing-card before">
+
+                <div class="missing-icon">
+                    ⚠️
+                </div>
+
+                <div>
+
+                    <span>
+                        Before Preprocessing
+                    </span>
+
+                    <strong>
+                        {{ missing_before|default(0) }}
+                    </strong>
+
+                    <p>
+                        Total missing values detected
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="missing-arrow">
+                →
+            </div>
+
+
+            <!-- AFTER -->
+
+            <div class="missing-card after">
+
+                <div class="missing-icon">
+                    ✅
+                </div>
+
+                <div>
+
+                    <span>
+                        After Preprocessing
+                    </span>
+
+                    <strong>
+                        {{ missing_after|default(0) }}
+                    </strong>
+
+                    <p>
+                        Missing values remaining
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SELECTED FEATURES
+         ===================================================== -->
+
+    <div class="preprocessing-section">
+
+        <div class="preprocessing-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    MACHINE LEARNING INPUT
+                </span>
+
+                <h2>
+                    Selected ML Features
+                </h2>
+
+                <p>
+                    These six spending features are used as input for
+                    StandardScaler and K-Means.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+
+            <div class="feature-card">
+                <span>01</span>
+                <strong>Fresh</strong>
+            </div>
+
+
+            <div class="feature-card">
+                <span>02</span>
+                <strong>Milk</strong>
+            </div>
+
+
+            <div class="feature-card">
+                <span>03</span>
+                <strong>Grocery</strong>
+            </div>
+
+
+            <div class="feature-card">
+                <span>04</span>
+                <strong>Frozen</strong>
+            </div>
+
+
+            <div class="feature-card">
+                <span>05</span>
+                <strong>Detergents_Paper</strong>
+            </div>
+
+
+            <div class="feature-card">
+                <span>06</span>
+                <strong>Delicatessen</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STANDARD SCALER
+         ===================================================== -->
+
+    <div class="scaler-card">
+
+        <div class="scaler-icon">
+            📏
+        </div>
+
+
+        <div class="scaler-content">
+
+            <span class="section-label">
+                FEATURE SCALING
+            </span>
+
+            <h2>
+                StandardScaler
+            </h2>
+
+            <p>
+                Each selected feature is standardized so that all
+                spending categories have a comparable scale before
+                K-Means clustering.
+            </p>
+
+        </div>
+
+
+        <div class="formula-box">
+
+            <span>
+                Standardization Formula
+            </span>
+
+            <strong>
+                z = (x − μ) / σ
+            </strong>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

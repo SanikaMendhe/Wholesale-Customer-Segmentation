@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Account | Wholesale AI
+{% endblock %}
+
+{% block auth_content %}
+
+<div class="auth-page">
+
+    <div class="auth-background">
+
+        <div class="auth-shape shape-one"></div>
+        <div class="auth-shape shape-two"></div>
+
+    </div>
+
+
+    <div class="auth-container register-container">
+
+
+        <div class="auth-brand">
+
+            <div class="auth-brand-icon">
+                📊
+            </div>
+
+            <div>
+
+                <h2>
+                    Wholesale AI
+                </h2>
+
+                <p>
+                    Customer Segmentation
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="auth-card register-card">
+
+
+            <div class="auth-card-header">
+
+                <div class="auth-icon">
+                    ✨
+                </div>
+
+                <h1>
+                    Create Your Account
+                </h1>
+
+                <p>
+                    Create an account to access the
+                    customer segmentation platform.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('register') }}"
+                class="auth-form"
+            >
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="full_name">
+                            Full Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="full_name"
+                                name="full_name"
+                                placeholder="Enter your full name"
+                                required
+                                autocomplete="name"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Choose username"
+                                required
+                                autocomplete="username"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉️
+                        </span>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                            required
+                            autocomplete="email"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Minimum 6 characters"
+                                minlength="6"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('password', this)"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="confirm_password">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                placeholder="Confirm password"
+                                minlength="6"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword(
+                                    'confirm_password',
+                                    this
+                                )"
+                            >
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="register-info">
+
+                    <span>
+                        🔐
+                    </span>
+
+                    <p>
+                        Your password will be securely
+                        encrypted before being stored.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-full"
+                >
+                    Create Account →
+                </button>
+
+
+            </form>
+
+
+            <div class="auth-divider">
+
+                <span>
+                    OR
+                </span>
+
+            </div>
+
+
+            <div class="auth-register">
+
+                <p>
+                    Already have an account?
+                </p>
+
+                <a
+                    href="{{ url_for('login') }}"
+                >
+                    Login here
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="auth-back">
+
+            <a
+                href="{{ url_for('landing') }}"
+            >
+                ← Back to Home
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+    } else {
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

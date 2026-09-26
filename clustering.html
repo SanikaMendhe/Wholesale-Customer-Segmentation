@@ -1,0 +1,432 @@
+{% extends "base.html" %}
+
+{% block title %}
+K-Means Clustering - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+K-Means Clustering
+{% endblock %}
+
+{% block content %}
+
+<div class="clustering-page">
+
+    <!-- PAGE HEADER -->
+    <div class="clustering-header">
+        <div>
+            <span class="section-label">
+                MACHINE LEARNING
+            </span>
+
+            <h1>
+                K-Means Clustering
+            </h1>
+
+            <p>
+                Customer clusters generated using the selected K value.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="clustering-summary">
+
+        <div class="clustering-summary-card">
+
+            <div class="summary-icon">
+                🎯
+            </div>
+
+            <div>
+                <span>BEST K</span>
+
+                <strong>
+                    {{ best_k|default(8) }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="clustering-summary-card">
+
+            <div class="summary-icon">
+                👥
+            </div>
+
+            <div>
+                <span>CUSTOMERS SHOWN</span>
+
+                <strong>
+                    {{ customers|length if customers else 100 }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="clustering-summary-card">
+
+            <div class="summary-icon">
+                🤖
+            </div>
+
+            <div>
+                <span>ALGORITHM</span>
+
+                <strong>
+                    K-Means
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTOMER RESULTS -->
+    <div class="clustering-section">
+
+        <div class="clustering-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    CLUSTER ANALYSIS
+                </span>
+
+                <h2>
+                    Customer Clustering Results
+                </h2>
+
+                <p>
+                    Customers are grouped according to their scaled
+                    spending patterns.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if customers %}
+
+        <div class="clustering-table-wrapper">
+
+            <table class="clustering-table">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Fresh</th>
+                        <th>Milk</th>
+                        <th>Grocery</th>
+                        <th>Frozen</th>
+                        <th>Detergents Paper</th>
+                        <th>Delicatessen</th>
+                        <th>Annual Spending</th>
+                        <th>Cluster</th>
+                        <th>Business Segment</th>
+                        <th>Profile</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for customer in customers %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ loop.index }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Fresh|float) }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Milk|float) }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Grocery|float) }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Frozen|float) }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Detergents_Paper|float) }}
+                        </td>
+
+                        <td>
+                            {{ "{:,.0f}".format(customer.Delicatessen|float) }}
+                        </td>
+
+                        <td>
+                            <strong class="annual-spending">
+                                ₹{{ "{:,.2f}".format(customer.Annual_Spending|float) }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="cluster-badge">
+                                Cluster {{ customer.Cluster }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <span class="segment-badge
+                                {% if customer.Business_Segment == 'High Value' %}
+                                    high-value
+                                {% elif customer.Business_Segment == 'Regular Value' %}
+                                    regular-value
+                                {% elif customer.Business_Segment == 'Growth Opportunity' %}
+                                    growth-value
+                                {% else %}
+                                    low-value
+                                {% endif %}
+                            ">
+
+                                {{ customer.Business_Segment }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a
+    href="{{ url_for('customer_profile', index=loop.index0) }}"
+    class="profile-btn"
+>
+    View
+</a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="clustering-empty">
+
+            <div>
+                🤖
+            </div>
+
+            <h2>
+                No Clustering Results
+            </h2>
+
+            <p>
+                Upload a customer dataset and run the ML pipeline first.
+            </p>
+
+            <a
+                href="{{ url_for('manager_dashboard') }}"
+                class="clustering-primary-btn"
+            >
+                Go to Dashboard
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- INFORMATION -->
+    <div class="clustering-info">
+
+        <div class="info-icon">
+            ℹ️
+        </div>
+
+        <div>
+
+            <strong>
+                Customer Data Display
+            </strong>
+
+            <p>
+                Showing the first 100 customers for better dashboard
+                performance. Use Customer Search to find a specific
+                customer.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- METHODOLOGY -->
+    <div class="clustering-section methodology-section">
+
+        <div class="clustering-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    ML PIPELINE
+                </span>
+
+                <h2>
+                    Clustering Methodology
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="methodology-grid">
+
+            <div class="methodology-card">
+
+                <div class="methodology-number">
+                    1
+                </div>
+
+                <div class="methodology-icon">
+                    🧹
+                </div>
+
+                <h3>
+                    Clean Data
+                </h3>
+
+                <p>
+                    Missing and negative values are handled.
+                </p>
+
+            </div>
+
+
+            <div class="methodology-arrow">
+                →
+            </div>
+
+
+            <div class="methodology-card">
+
+                <div class="methodology-number">
+                    2
+                </div>
+
+                <div class="methodology-icon">
+                    📏
+                </div>
+
+                <h3>
+                    Scale Features
+                </h3>
+
+                <p>
+                    StandardScaler is applied.
+                </p>
+
+            </div>
+
+
+            <div class="methodology-arrow">
+                →
+            </div>
+
+
+            <div class="methodology-card">
+
+                <div class="methodology-number">
+                    3
+                </div>
+
+                <div class="methodology-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    K-Means
+                </h3>
+
+                <p>
+                    Customers are grouped.
+                </p>
+
+            </div>
+
+
+            <div class="methodology-arrow">
+                →
+            </div>
+
+
+            <div class="methodology-card">
+
+                <div class="methodology-number">
+                    4
+                </div>
+
+                <div class="methodology-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Business Segments
+                </h3>
+
+                <p>
+                    Clusters are ranked by average spending.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- IMPORTANT NOTE -->
+    <div class="clustering-important">
+
+        <div class="important-icon">
+            💡
+        </div>
+
+        <div>
+
+            <h3>
+                Important
+            </h3>
+
+            <p>
+                Cluster numbers are technical identifiers generated by
+                K-Means. Business segment names are assigned separately
+                according to average annual spending.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

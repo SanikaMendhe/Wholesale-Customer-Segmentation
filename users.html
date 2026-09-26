@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Management - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+User Management
+{% endblock %}
+
+{% block content %}
+
+<div class="users-page">
+
+    <!-- PAGE HEADER -->
+    <div class="users-header">
+
+        <div>
+            <span class="section-label">ACCOUNT ADMINISTRATION</span>
+
+            <h1>User Management</h1>
+
+            <p>
+                Manage registered users of the customer segmentation system.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+    <section class="users-stats">
+
+        <div class="user-stat-card">
+
+            <div class="user-stat-icon">
+                👥
+            </div>
+
+            <div class="user-stat-content">
+
+                <span>Total Users</span>
+
+                <strong>{{ users|length }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-card">
+
+            <div class="user-stat-icon manager">
+                👔
+            </div>
+
+            <div class="user-stat-content">
+
+                <span>Managers</span>
+
+                <strong>
+                    {{ users | selectattr('role', 'equalto', 'Manager') | list | length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-card">
+
+            <div class="user-stat-icon registered">
+                🟢
+            </div>
+
+            <div class="user-stat-content">
+
+                <span>Registered Accounts</span>
+
+                <strong>{{ users|length }}</strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- REGISTERED USERS -->
+    <section class="users-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">USER DIRECTORY</span>
+
+                <h2>Registered Users</h2>
+
+                <p>
+                    Users who have created an account in the system.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="users-table-card">
+
+            {% if users %}
+
+            <div class="users-table-wrapper">
+
+                <table class="users-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Full Name</th>
+
+                            <th>Username</th>
+
+                            <th>Email</th>
+
+                            <th>Role</th>
+
+                            <th>Created At</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for user in users %}
+
+                        <tr>
+
+                            <td>
+                                <span class="user-id">
+                                    {{ user.id }}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                <div class="user-name-cell">
+
+                                    <div class="user-avatar">
+                                        {{ user.full_name[0]|upper }}
+                                    </div>
+
+                                    <span>
+                                        {{ user.full_name }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                <span class="username-text">
+                                    {{ user.username }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="email-text">
+                                    {{ user.email }}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                <span class="role-badge">
+                                    {{ user.role }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="date-text">
+                                    {{ user.created_at }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if session.get('user_id') == user.id %}
+
+                                    <span class="current-user-badge">
+                                        Current User
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="protected-user-badge">
+                                        Protected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="users-empty">
+
+                <div class="users-empty-icon">
+                    👥
+                </div>
+
+                <h3>No Registered Users</h3>
+
+                <p>
+                    No user accounts have been registered yet.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ACCOUNT MANAGEMENT -->
+    <section class="users-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">SECURITY & ACCESS</span>
+
+                <h2>Account Management</h2>
+
+                <p>
+                    Security and account access information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="account-management-grid">
+
+
+            <!-- SECURE LOGIN -->
+            <div class="account-info-card">
+
+                <div class="account-info-icon">
+                    🔐
+                </div>
+
+                <div>
+
+                    <h3>Secure Login</h3>
+
+                    <p>
+                        User passwords are stored using secure password
+                        hashing instead of plain text passwords.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SELF REGISTRATION -->
+            <div class="account-info-card">
+
+                <div class="account-info-icon">
+                    📝
+                </div>
+
+                <div>
+
+                    <h3>Self Registration</h3>
+
+                    <p>
+                        New users can create their own account through
+                        the registration page.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SESSION ACCESS -->
+            <div class="account-info-card">
+
+                <div class="account-info-icon">
+                    🛡️
+                </div>
+
+                <div>
+
+                    <h3>Session Based Access</h3>
+
+                    <p>
+                        Logged-in users access the dashboard through
+                        an authenticated session.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- USER MANAGEMENT NOTE -->
+            <div class="account-info-card note-card">
+
+                <div class="account-info-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <h3>User Management Note</h3>
+
+                    <p>
+                        The system does not use a fixed default admin
+                        username or password. Users create their accounts
+                        through the registration page.
+                    </p>
+
+                    <p class="note-warning">
+                        The currently logged-in account cannot be deleted
+                        from this page.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

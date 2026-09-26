@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}
+Wholesale AI | Customer Segmentation
+{% endblock %}
+
+{% block auth_content %}
+
+<div class="wholesale-landing">
+
+    <!-- NAVBAR -->
+    <nav class="wholesale-navbar">
+
+        <div class="wholesale-brand">
+
+            <div class="brand-logo">
+                📊
+            </div>
+
+            <div class="brand-text">
+                <h2>Wholesale AI</h2>
+                <span>Customer Segmentation</span>
+            </div>
+
+        </div>
+
+
+        <div class="navbar-actions">
+
+            <a href="{{ url_for('login') }}" class="landing-login">
+                Login
+            </a>
+
+            <a href="{{ url_for('register') }}" class="landing-register">
+                Create Account
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN HERO -->
+    <main class="wholesale-hero">
+
+        <!-- LEFT CONTENT -->
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                🤖 MACHINE LEARNING POWERED
+            </div>
+
+            <h1>
+                Wholesale Customer
+                <span>Segmentation</span>
+            </h1>
+
+            <p class="hero-description">
+                Analyze wholesale customer purchasing behavior,
+                discover customer groups and understand which
+                customers create the most business value.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="{{ url_for('login') }}" class="hero-login">
+                    Login →
+                </a>
+
+                <a href="{{ url_for('register') }}" class="hero-register">
+                    Create Account
+                </a>
+
+            </div>
+
+
+            <!-- SMALL BUSINESS POINTS -->
+            <div class="business-points">
+
+                <div class="business-point">
+                    <div class="point-icon">🛒</div>
+                    <div>
+                        <strong>Wholesale Data</strong>
+                        <span>Customer spending analysis</span>
+                    </div>
+                </div>
+
+
+                <div class="business-point">
+                    <div class="point-icon">📊</div>
+                    <div>
+                        <strong>ML Analytics</strong>
+                        <span>K-Means customer clustering</span>
+                    </div>
+                </div>
+
+
+                <div class="business-point">
+                    <div class="point-icon">👥</div>
+                    <div>
+                        <strong>Customer Segments</strong>
+                        <span>Business-focused insights</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT VISUAL -->
+        <div class="wholesale-visual">
+
+            <div class="visual-glow"></div>
+
+            <div class="warehouse-card">
+
+                <div class="warehouse-top">
+
+                    <span>WHOLESALE ANALYTICS</span>
+
+                    <span class="live-dot">
+                        ● LIVE
+                    </span>
+
+                </div>
+
+
+                <!-- MAIN ICON -->
+                <div class="warehouse-icon">
+                    🛒
+                </div>
+
+
+                <h3>
+                    Customer Intelligence
+                </h3>
+
+                <p>
+                    Turn wholesale purchasing data
+                    into meaningful customer segments.
+                </p>
+
+
+                <!-- MINI ANALYTICS -->
+                <div class="mini-analytics">
+
+                    <div class="mini-card">
+
+                        <span class="mini-icon">📦</span>
+
+                        <div>
+                            <strong>Customers</strong>
+                            <small>Wholesale Data</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <span class="mini-icon">🎯</span>
+
+                        <div>
+                            <strong>K-Means</strong>
+                            <small>ML Clustering</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <span class="mini-icon">💎</span>
+
+                        <div>
+                            <strong>Segments</strong>
+                            <small>Business Value</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mini-card">
+
+                        <span class="mini-icon">💡</span>
+
+                        <div>
+                            <strong>Insights</strong>
+                            <small>Smart Decisions</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- BOTTOM INFO -->
+    <section class="landing-bottom">
+
+        <div>
+            <span>🛍️</span>
+            Wholesale
+        </div>
+
+        <div>
+            <span>📦</span>
+            Customer Data
+        </div>
+
+        <div>
+            <span>📈</span>
+            Analytics
+        </div>
+
+        <div>
+            <span>🎯</span>
+            Segmentation
+        </div>
+
+        <div>
+            <span>💡</span>
+            Business Insights
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        Wholesale AI Customer Segmentation
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+{% if session.get('user_id') %}
+
+<div class="app-layout">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="sidebar-logo-icon">
+                🤖
+            </div>
+
+            <div class="sidebar-logo-text">
+                Wholesale AI
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-user">
+
+            <strong>
+                {{ session.get('full_name', 'User') }}
+            </strong>
+
+            <small>
+                {{ session.get('role', 'Manager') }}
+            </small>
+
+        </div>
+
+
+        <!-- =================================================
+             NAVIGATION
+        ================================================== -->
+
+        <nav class="sidebar-nav">
+
+            <!-- MAIN -->
+
+            <div class="nav-section">
+                MAIN
+            </div>
+
+
+            <a
+                href="{{ url_for('manager_dashboard') }}"
+                class="{% if request.endpoint == 'manager_dashboard' %}active{% endif %}"
+            >
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('customer_search') }}"
+                class="{% if request.endpoint == 'customer_search' %}active{% endif %}"
+            >
+                <span>👥</span>
+                <span>Customers</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('segments') }}"
+                class="{% if request.endpoint == 'segments' %}active{% endif %}"
+            >
+                <span>🎯</span>
+                <span>Segments</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('segment_comparison') }}"
+                class="{% if request.endpoint == 'segment_comparison' %}active{% endif %}"
+            >
+                <span>⚖️</span>
+                <span>Comparison</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('recommendations') }}"
+                class="{% if request.endpoint == 'recommendations' %}active{% endif %}"
+            >
+                <span>💡</span>
+                <span>Recommendations</span>
+            </a>
+
+
+            <!-- DATA -->
+
+            <div class="nav-section">
+                DATA
+            </div>
+
+
+            <a
+                href="{{ url_for('dataset') }}"
+                class="{% if request.endpoint == 'dataset' %}active{% endif %}"
+            >
+                <span>📁</span>
+                <span>Dataset</span>
+            </a>
+
+
+            <!-- MACHINE LEARNING -->
+
+            <div class="nav-section">
+                MACHINE LEARNING
+            </div>
+
+
+            <a
+                href="{{ url_for('eda') }}"
+                class="{% if request.endpoint == 'eda' %}active{% endif %}"
+            >
+                <span>📈</span>
+                <span>EDA</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('preprocessing') }}"
+                class="{% if request.endpoint == 'preprocessing' %}active{% endif %}"
+            >
+                <span>🧹</span>
+                <span>Preprocessing</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('elbow') }}"
+                class="{% if request.endpoint == 'elbow' %}active{% endif %}"
+            >
+                <span>📉</span>
+                <span>Elbow Analysis</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('clustering') }}"
+                class="{% if request.endpoint == 'clustering' %}active{% endif %}"
+            >
+                <span>🧠</span>
+                <span>Clustering</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('performance') }}"
+                class="{% if request.endpoint == 'performance' %}active{% endif %}"
+            >
+                <span>🏆</span>
+                <span>Performance</span>
+            </a>
+
+
+            <a
+                href="{{ url_for('pca') }}"
+                class="{% if request.endpoint == 'pca' %}active{% endif %}"
+            >
+                <span>🔬</span>
+                <span>PCA Visualization</span>
+            </a>
+
+
+            <!-- BUSINESS INSIGHTS -->
+
+            <div class="nav-section">
+                BUSINESS INSIGHTS
+            </div>
+
+
+            <a
+                href="{{ url_for('insights') }}"
+                class="{% if request.endpoint == 'insights' %}active{% endif %}"
+            >
+                <span>💎</span>
+                <span>Insights</span>
+            </a>
+
+
+            <!-- MANAGEMENT -->
+
+            {% if session.get('role') == 'Manager' %}
+
+            <div class="nav-section">
+                MANAGEMENT
+            </div>
+
+
+            <a
+                href="{{ url_for('users') }}"
+                class="{% if request.endpoint == 'users' %}active{% endif %}"
+            >
+                <span>👤</span>
+                <span>Users</span>
+            </a>
+
+            {% endif %}
+
+        </nav>
+
+
+        <!-- SIDEBAR FOOTER -->
+
+        <div class="sidebar-footer">
+
+            <a href="{{ url_for('logout') }}">
+
+                <span>🚪</span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN WRAPPER
+    ====================================================== -->
+
+    <div class="main-wrapper">
+
+
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
+
+        <header class="topbar">
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    gap:15px;
+                "
+            >
+
+                <button
+                    type="button"
+                    class="menu-button"
+                    id="menuButton"
+                >
+                    ☰
+                </button>
+
+
+                <div class="topbar-title">
+
+                    {% block page_heading %}
+                    {% endblock %}
+
+                </div>
+
+            </div>
+
+
+            <!-- GLOBAL SEARCH -->
+
+            <form
+                class="global-search"
+                id="globalSearchForm"
+                onsubmit="return false;"
+            >
+
+                <input
+                    type="text"
+                    id="globalSearchInput"
+                    placeholder="Search customers..."
+                    autocomplete="off"
+                >
+
+            </form>
+
+        </header>
+
+
+        <!-- =================================================
+             FLASH MESSAGES
+        ================================================== -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash-message {{ category }}">
+
+                            <span>
+                                {{ message }}
+                            </span>
+
+                            <button
+                                type="button"
+                                class="flash-close"
+                                onclick="this.parentElement.remove()"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =================================================
+             MAIN PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="page-footer">
+
+            ML-Based Wholesale Customer Segmentation
+
+            <br>
+
+            K-Means Clustering •
+            Customer Analytics •
+            Business Insights
+
+        </footer>
+
+
+    </div>
+
+</div>
+
+
+{% else %}
+
+<!-- =========================================================
+     PUBLIC / AUTHENTICATION PAGES
+========================================================= -->
+
+{% block auth_content %}
+{% endblock %}
+
+{% endif %}
+
+
+<!-- JAVASCRIPT -->
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}"
+></script>
+
+
+</body>
+
+</html>

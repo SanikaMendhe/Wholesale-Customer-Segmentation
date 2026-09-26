@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}
+Business Insights - Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+Business Insights
+{% endblock %}
+
+{% block content %}
+
+<div class="insights-page">
+
+    <!-- PAGE INTRO -->
+    <div class="insights-header">
+        <div>
+            <span class="section-label">BUSINESS ANALYTICS</span>
+
+            <h1>Business Insights</h1>
+
+            <p>
+                Convert customer segmentation results into actionable
+                business strategies.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- HOW INSIGHTS ARE GENERATED -->
+    <section class="insights-section">
+
+        <div class="section-heading">
+            <span class="section-label">METHODOLOGY</span>
+
+            <h2>How Insights Are Generated</h2>
+
+            <p>
+                Business segments are created from customer spending behaviour.
+            </p>
+        </div>
+
+
+        <div class="insight-flow">
+
+            <div class="flow-card">
+                <div class="flow-number">01</div>
+
+                <div class="flow-icon">👥</div>
+
+                <h3>Customer Data</h3>
+
+                <p>
+                    Six spending categories are analyzed.
+                </p>
+            </div>
+
+
+            <div class="flow-arrow">→</div>
+
+
+            <div class="flow-card">
+                <div class="flow-number">02</div>
+
+                <div class="flow-icon">🤖</div>
+
+                <h3>K-Means</h3>
+
+                <p>
+                    Customers are grouped into clusters.
+                </p>
+            </div>
+
+
+            <div class="flow-arrow">→</div>
+
+
+            <div class="flow-card">
+                <div class="flow-number">03</div>
+
+                <div class="flow-icon">📊</div>
+
+                <h3>Spending Ranking</h3>
+
+                <p>
+                    Clusters are ranked by average spending.
+                </p>
+            </div>
+
+
+            <div class="flow-arrow">→</div>
+
+
+            <div class="flow-card">
+                <div class="flow-number">04</div>
+
+                <div class="flow-icon">💡</div>
+
+                <h3>Business Insight</h3>
+
+                <p>
+                    Marketing actions are recommended.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BUSINESS INSIGHTS -->
+    <section class="insights-section">
+
+        <div class="section-heading">
+            <span class="section-label">CUSTOMER STRATEGY</span>
+
+            <h2>Customer Insights</h2>
+
+            <p>
+                Recommended strategies based on customer spending behaviour.
+            </p>
+        </div>
+
+
+        <div class="insight-grid">
+
+            {% if segments %}
+
+                {% for segment in segments %}
+
+                    {% set segment_name = segment.get(
+                        'segment',
+                        segment.get('Segment', 'Unknown')
+                    ) %}
+
+                    {% set customers = segment.get(
+                        'customers',
+                        0
+                    ) | int %}
+
+                    {% set average_spending = segment.get(
+                        'average_spending',
+                        segment.get('avg_spending', 0)
+                    ) | float %}
+
+                    {% set total_spending = segment.get(
+                        'total_spending',
+                        segment.get('total', 0)
+                    ) | float %}
+
+                    {% set cluster = segment.get(
+                        'cluster',
+                        segment.get('Cluster', 'N/A')
+                    ) %}
+
+                    {% set recommendation = segment.get(
+                        'recommendation',
+                        'Develop targeted customer engagement strategies.'
+                    ) %}
+
+
+                    <!-- INSIGHT CARD -->
+                    <div class="insight-card">
+
+                        <!-- CARD HEADER -->
+                        <div class="insight-card-header">
+
+                            <div>
+
+                                <span class="insight-label">
+                                    CUSTOMER SEGMENT
+                                </span>
+
+                                <h3>
+                                    {{ segment_name }}
+                                </h3>
+
+                            </div>
+
+                            <div class="insight-rank">
+                                {{ loop.index }}
+                            </div>
+
+                        </div>
+
+
+                        <!-- METRICS -->
+                        <div class="insight-metrics">
+
+                            <div class="metric-box">
+
+                                <span class="metric-label">
+                                    Customers
+                                </span>
+
+                                <strong>
+                                    {{ customers }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="metric-box">
+
+                                <span class="metric-label">
+                                    Average Spending
+                                </span>
+
+                                <strong>
+                                    ₹{{ "{:,.2f}".format(average_spending) }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="metric-box">
+
+                                <span class="metric-label">
+                                    Total Spending
+                                </span>
+
+                                <strong>
+                                    ₹{{ "{:,.2f}".format(total_spending) }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RECOMMENDED STRATEGY -->
+                        <div class="strategy-box">
+
+                            <div class="strategy-icon">
+                                💡
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    Recommended Strategy
+                                </span>
+
+                                <p>
+                                    {{ recommendation }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+                        <div class="actions-section">
+
+                            <h4>
+                                Suggested Actions
+                            </h4>
+
+
+                            {% if segment_name == "High Value" %}
+
+                                <ul>
+                                    <li>
+                                        Build customer loyalty programs.
+                                    </li>
+
+                                    <li>
+                                        Provide premium offers.
+                                    </li>
+
+                                    <li>
+                                        Encourage long-term retention.
+                                    </li>
+
+                                    <li>
+                                        Offer personalized products and services.
+                                    </li>
+                                </ul>
+
+
+                            {% elif segment_name == "Regular Value" %}
+
+                                <ul>
+                                    <li>
+                                        Encourage repeat purchases.
+                                    </li>
+
+                                    <li>
+                                        Create product bundles.
+                                    </li>
+
+                                    <li>
+                                        Use cross-selling campaigns.
+                                    </li>
+
+                                    <li>
+                                        Promote frequently purchased categories.
+                                    </li>
+                                </ul>
+
+
+                            {% elif segment_name == "Growth Opportunity" %}
+
+                                <ul>
+                                    <li>
+                                        Provide targeted promotional offers.
+                                    </li>
+
+                                    <li>
+                                        Introduce complementary products.
+                                    </li>
+
+                                    <li>
+                                        Use cross-selling strategies.
+                                    </li>
+
+                                    <li>
+                                        Encourage category expansion.
+                                    </li>
+                                </ul>
+
+
+                            {% else %}
+
+                                <ul>
+                                    <li>
+                                        Run customer re-engagement campaigns.
+                                    </li>
+
+                                    <li>
+                                        Follow up with inactive customers.
+                                    </li>
+
+                                    <li>
+                                        Provide limited-time offers.
+                                    </li>
+
+                                    <li>
+                                        Identify opportunities to increase
+                                        purchase frequency.
+                                    </li>
+                                </ul>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📊
+                    </div>
+
+                    <h3>
+                        No Business Insights Available
+                    </h3>
+
+                    <p>
+                        Upload a customer dataset to generate business insights.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- METHODOLOGY NOTE -->
+    <section class="methodology-note">
+
+        <div class="methodology-icon">
+            📌
+        </div>
+
+        <div>
+
+            <h3>Segmentation Methodology</h3>
+
+            <p>
+                Business segment names are not assigned from the numerical
+                cluster ID. The clusters are ranked according to their
+                average annual spending and then mapped to business segments.
+            </p>
+
+            <p>
+                Therefore, Cluster 0 does not automatically mean High Value,
+                and Cluster 1 does not automatically mean Low Value.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

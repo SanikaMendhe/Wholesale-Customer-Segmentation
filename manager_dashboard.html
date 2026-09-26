@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard - Wholesale Customer Segmentation
+{% endblock %}
+
+{% block page_heading %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- =====================================================
+         WELCOME SECTION
+         ===================================================== -->
+
+    <div class="welcome-section">
+
+        <div>
+            <h1>
+                Welcome, {{ session.get('full_name', 'User') }}
+            </h1>
+
+            <p>
+                ML-Based Wholesale Customer Segmentation Dashboard
+            </p>
+        </div>
+
+        <div class="welcome-icon">
+            🤖
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATASET NOT AVAILABLE
+         ===================================================== -->
+
+    {% if not ml_available %}
+
+    <div class="dashboard-card upload-dashboard-card">
+
+        <div class="upload-icon">
+            📁
+        </div>
+
+        <h2>
+            Dataset Not Available
+        </h2>
+
+        <p>
+            Please select your wholesale customer CSV dataset
+            to start customer segmentation analysis.
+        </p>
+
+
+        <form
+            action="{{ url_for('upload') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            id="dashboardUploadForm"
+        >
+
+            <div class="dashboard-file-box">
+
+                <input
+                    type="file"
+                    name="file"
+                    id="dashboardFileInput"
+                    accept=".csv"
+                    required
+                >
+
+                <label for="dashboardFileInput">
+                    📂 Choose CSV File
+                </label>
+
+                <span id="dashboardFileName">
+                    No file selected
+                </span>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button"
+                id="dashboardUploadButton"
+            >
+                🚀 Upload & Analyze
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- =====================================================
+         DATASET ANALYZED STATUS
+         ===================================================== -->
+
+    <div class="dataset-status success-status">
+
+        <div class="status-icon">
+            ✅
+        </div>
+
+        <div>
+
+            <strong>
+                Dataset Analyzed Successfully
+            </strong>
+
+            <p>
+                Customer segmentation analysis is ready.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         OVERVIEW STATISTICS
+         ===================================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+                <h2>
+                    Overview
+                </h2>
+
+                <p>
+                    Summary of the wholesale customer dataset
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+
+            <!-- TOTAL CUSTOMERS -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    👥
+                </div>
+
+                <div class="stat-content">
+
+                    <span class="stat-label">
+                        Total Customers
+                    </span>
+
+                    <strong class="stat-value">
+                        {{ "{:,}".format(total_customers) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL SPENDING -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div class="stat-content">
+
+                    <span class="stat-label">
+                        Total Spending
+                    </span>
+
+                    <strong class="stat-value">
+                        {{ "{:,.0f}".format(total_spending) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- AVERAGE SPENDING -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📊
+                </div>
+
+                <div class="stat-content">
+
+                    <span class="stat-label">
+                        Average Spending
+                    </span>
+
+                    <strong class="stat-value">
+                        {{ "{:,.0f}".format(average_spending) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- BEST K -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🎯
+                </div>
+
+                <div class="stat-content">
+
+                    <span class="stat-label">
+                        Best K
+                    </span>
+
+                    <strong class="stat-value">
+                        {{ best_k }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- SILHOUETTE -->
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+                <div class="stat-content">
+
+                    <span class="stat-label">
+                        Silhouette Score
+                    </span>
+
+                    <strong class="stat-value">
+                        {{ silhouette }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CLUSTER OVERVIEW
+         ===================================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Cluster Overview
+                </h2>
+
+                <p>
+                    Business segments created from customer clustering
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="segment-grid">
+
+            {% for segment in summary %}
+
+            <div class="segment-card">
+
+                <div class="segment-card-header">
+
+                    <span class="segment-cluster">
+                        Cluster {{ segment.cluster }}
+                    </span>
+
+                    <span class="segment-badge">
+                        {{ segment.segment }}
+                    </span>
+
+                </div>
+
+
+                <div class="segment-customers">
+
+                    <span>
+                        Customers
+                    </span>
+
+                    <strong>
+                        {{ segment.customers }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CHANGE DATASET
+         ===================================================== -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-card change-dataset-card">
+
+            <div>
+
+                <h3>
+                    Analyze Another Dataset
+                </h3>
+
+                <p>
+                    Upload another CSV file to run the segmentation
+                    analysis again.
+                </p>
+
+            </div>
+
+
+            <form
+                action="{{ url_for('upload') }}"
+                method="POST"
+                enctype="multipart/form-data"
+                id="changeDatasetForm"
+            >
+
+                <input
+                    type="file"
+                    name="file"
+                    id="changeDatasetInput"
+                    accept=".csv"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="secondary-button"
+                >
+                    🔄 Upload New Dataset
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     DASHBOARD FILE INPUT JAVASCRIPT
+     ===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const fileInput =
+        document.getElementById("dashboardFileInput");
+
+    const fileName =
+        document.getElementById("dashboardFileName");
+
+    const uploadForm =
+        document.getElementById("dashboardUploadForm");
+
+    const uploadButton =
+        document.getElementById("dashboardUploadButton");
+
+
+    if (fileInput && fileName) {
+
+        fileInput.addEventListener("change", function () {
+
+            if (this.files.length > 0) {
+
+                fileName.textContent =
+                    this.files[0].name;
+
+            } else {
+
+                fileName.textContent =
+                    "No file selected";
+
+            }
+
+        });
+
+    }
+
+
+    if (uploadForm && uploadButton) {
+
+        uploadForm.addEventListener("submit", function () {
+
+            uploadButton.disabled = true;
+
+            uploadButton.textContent =
+                "⏳ Processing Dataset...";
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
