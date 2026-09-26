@@ -161,3 +161,6 @@ K = 2 to 8
                |
                v
       Recommendations
+
+👩‍💻 Author
+Sanika Mendhe
