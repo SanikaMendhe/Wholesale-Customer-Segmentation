@@ -162,5 +162,19 @@ K = 2 to 8
                v
       Recommendations
 
-👩‍💻 Author
-Sanika Mendhe
+-------------------
+
+
+## 👩‍💻 Author
+
+* Sanika Mendhe
+
+---
+
+## 📌 Conclusion
+
+## Conclusion
+
+This project analyzes wholesale customer data to identify meaningful customer segments based on their purchasing behavior. The segmentation provides a clearer understanding of customer patterns and can support data-driven business decisions.
+
+
